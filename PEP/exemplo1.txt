@@ -1,0 +1,11 @@
+Plano P1:
+	Sessão S1 - "Introdução a Arrays"
+		Tema: T1
+		Parte A: E1, E2, ?E3
+		Parte E: E18, E20
+		Ordem: E, A
+	Sessão S2 - "Classes em Java"
+		Tema: T10
+		Parte A: E4, E2
+		Parte E: E8
+FIM	

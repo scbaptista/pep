@@ -30,7 +30,7 @@ var validateLogin = function (){
 			if (email=="gestao@teste.com" && pass=="admin") {
 				window.location.href="home.html?user=admin";
 			}else if(email=="aluno@teste.com" && pass=="teste") {
-				window.location.href="home.html?user=aluno";
+				window.location.href="alunos_home.html?user=aluno";
 			}else{
 				document.getElementById("erroDivLogin").innerText  = "Sua password ou email estão errados";
 			}
@@ -70,17 +70,12 @@ var loadPageIndex = function (){
     	if(token == 'aluno'){
     		document.getElementById("nameUser").innerText = token;	
     		document.getElementById("sessoes_admin").children[0].style.display = "none";
-    		document.getElementById("temas").children[0].style.display = "none";
-    		document.getElementById("resultados").children[0].style.display = "none";
-    		document.getElementById("questoes").children[0].style.display = "none";
-    		document.getElementById("home_admin").children[0].style.display = "none";
-    		setNewPage('../page/alunos_home.html');
+    		setNewPage('../page/sessoes_aluno.html');
 
     	}
     	if(token == 'admin'){
     		document.getElementById("sessoes_aluno").children[0].style.display = "none";
-    		document.getElementById("home_aluno").children[0].style.display = "none";
-    		setNewPage('../page/admin_home.html');
+    		setNewPage('../page/sessoes_admin.html');
     	}
     }
 

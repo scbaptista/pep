@@ -40,6 +40,40 @@ var validateLogin = function (){
 	
 }
 
+
+var newUser = function (){
+	
+	var name = document.getElementById("name").value; 
+	var pass = document.getElementById("pass").value; 
+	var passconf = document.getElementById("pass_conf").value;
+	var email = document.getElementById("email").value;
+
+
+	if( email==""    || email.indexOf('@')==-1  || email.indexOf('.')==-1 )	{
+			document.getElementById("erroDivLogin").innerText  = "Por favor, informe um EMAIL válido!";
+		
+	}else if(pass == passconf){
+		console.log('olaqwqw');
+		var token = '{"name":"'+name+'","email":"'+email+'","pass":"'+pass+'"}';
+		var tokenfinal = btoa(unescape(encodeURIComponent(token)));
+	
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+		      console.log(this.responseText);
+		    
+		  };
+		  xhttp.open("POST", "http://localhost:8081/PEP/serv/user?op=newuser&token="+tokenfinal, true);
+		  xhttp.send();
+		  
+		
+	}else{
+		document.getElementById("erroDivLogin").innerText  = "As passwords não são iguais";
+	}
+
+
+
+}
+
 var onLoadLoginPage = function (){
 	$("#pass_login").keyup(function(event) {
 	    if (event.keyCode === 13) {

@@ -6,7 +6,6 @@ package pep.server.utils.grammar;
     import java.sql.*;
     import java.util.logging.Level;
 	import java.util.logging.Logger;
-    //import pep.server.PgConection;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -84,10 +83,9 @@ public class PEPLexer extends Lexer {
 	}
 
 
-	    ArrayList<String> sessoes;
+	    ArrayList<String> sessoes, exs;
 	    StringBuilder sessao;
 	    int i, flagOrd;
-	    Connection connectionDB;
 
 
 	public PEPLexer(CharStream input) {

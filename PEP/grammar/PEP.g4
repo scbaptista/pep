@@ -8,41 +8,25 @@ grammar PEP;
     import java.sql.*;
     import java.util.logging.Level;
 	import java.util.logging.Logger;
-    //import pep.server.PgConection;
 }
 
 @members {
-    ArrayList<String> sessoes;
+    ArrayList<String> sessoes, exs;
     StringBuilder sessao;
     int i, flagOrd;
-    Connection connectionDB;
 }
 
-plano		
-@init  { i = 0; sessoes = new ArrayList<String>(); 
-		 try {
-			Class.forName("org.postgresql.Driver").newInstance();
-			String connString = "jdbc:postgresql://" + "localhost:5432" + "/" + "pep";
-			connectionDB = DriverManager.getConnection(connString, "postgres", "postgres");
-		
-			System.out.println("Connected: " + connectionDB);
-		 } catch (Exception ex) {
-            Logger lgr = Logger.getLogger(Connection.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
-        
-         }
-		}
+plano[ArrayList<String> exercs]		
+@init  { i = 0; sessoes = new ArrayList<String>(); exs = new ArrayList<String>(exercs); }
 			: 'Plano' idPlano sessoes 'Fim' 						
 			   { 
 			   	 for(int j=0; j<i; j++)
 			   		System.out.println(sessoes.get(j));
-			   	 //JSONParser parser = new JSONParser();
-				 //JSONObject json = (JSONObject) parser.parse(stringToParse);
 			   }
 			;
 sessoes		: sessao+
 			;
-sessao  	: 'SESSÃO' infoSessao tema parteA parteE ordem?
+sessao		: 'SESSÃO' infoSessao tema parteA parteE ordem?
 			  { 
 			  	if (flagOrd == 0) {
 			  		sessao.append("\"ordem\": \"E, A\"");
@@ -64,7 +48,7 @@ titulo		: STRING
 			;
 tema		: 'TEMA:' idTema
 			  { 
-			  	String t  = "BD";
+			  	String t = "BD";
 			  	// "tema": "Arrays", 
 			  	sessao.append("\"tema\": " + t + ", "); 
 			  }
@@ -85,7 +69,7 @@ listaA		: ('?'? exerc)+
 			;
 listaE		: exerc+
 			;
-exerc		: idExerc ','
+exerc 		: idExerc ',' { sessao.append(","); }
 			| idExerc 
 			;
 idPlano		: 'P'INT
@@ -94,9 +78,17 @@ idSessao	: 'S'INT
 			;
 idTema		: 'T'INT
             ;
-idExerc		: 'E'INT
+idExerc		: 'E' e=INT 
+			{ 
+				if(exs.contains($e.text)) {
+					sessao.append("{\"id\": \"E" + $e.text + "\"}");
+				} else {
+					//throw new RuntimeException("$$$$$$ ERRO $$$$$$");
+					System.out.println("$$$$$$ ERRO $$$$$$");
+					System.exit(1);
+				}
+			}
             ;
-
 WS          : [ \t\r\n]  -> skip
             ;
 INT         : '0'..'9'+

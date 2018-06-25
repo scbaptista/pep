@@ -6,7 +6,6 @@ package pep.server.utils.grammar;
     import java.sql.*;
     import java.util.logging.Level;
 	import java.util.logging.Logger;
-    //import pep.server.PgConection;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -93,24 +92,26 @@ public class PEPParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	    ArrayList<String> sessoes;
+	    ArrayList<String> sessoes, exs;
 	    StringBuilder sessao;
 	    int i, flagOrd;
-	    Connection connectionDB;
 
 	public PEPParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class PlanoContext extends ParserRuleContext {
+		public ArrayList<String> exercs;
 		public IdPlanoContext idPlano() {
 			return getRuleContext(IdPlanoContext.class,0);
 		}
 		public SessoesContext sessoes() {
 			return getRuleContext(SessoesContext.class,0);
 		}
-		public PlanoContext(ParserRuleContext parent, int invokingState) {
+		public PlanoContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
+		public PlanoContext(ParserRuleContext parent, int invokingState, ArrayList<String> exercs) {
 			super(parent, invokingState);
+			this.exercs = exercs;
 		}
 		@Override public int getRuleIndex() { return RULE_plano; }
 		@Override
@@ -123,22 +124,10 @@ public class PEPParser extends Parser {
 		}
 	}
 
-	public final PlanoContext plano() throws RecognitionException {
-		PlanoContext _localctx = new PlanoContext(_ctx, getState());
+	public final PlanoContext plano(ArrayList<String> exercs) throws RecognitionException {
+		PlanoContext _localctx = new PlanoContext(_ctx, getState(), exercs);
 		enterRule(_localctx, 0, RULE_plano);
-		 i = 0; sessoes = new ArrayList<String>(); 
-				 try {
-					Class.forName("org.postgresql.Driver").newInstance();
-					String connString = "jdbc:postgresql://" + "localhost:5432" + "/" + "pep";
-					connectionDB = DriverManager.getConnection(connString, "postgres", "postgres");
-				
-					System.out.println("Connected: " + connectionDB);
-				 } catch (Exception ex) {
-		            Logger lgr = Logger.getLogger(Connection.class.getName());
-		            lgr.log(Level.SEVERE, ex.getMessage(), ex);
-		        
-		         }
-				
+		 i = 0; sessoes = new ArrayList<String>(); exs = new ArrayList<String>(exercs); 
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -153,8 +142,6 @@ public class PEPParser extends Parser {
 			 
 						   	 for(int j=0; j<i; j++)
 						   		System.out.println(sessoes.get(j));
-						   	 //JSONParser parser = new JSONParser();
-							 //JSONObject json = (JSONObject) parser.parse(stringToParse);
 						   
 			}
 		}
@@ -420,7 +407,7 @@ public class PEPParser extends Parser {
 			setState(61);
 			idTema();
 			 
-						  	String t  = "BD";
+						  	String t = "BD";
 						  	// "tema": "Arrays", 
 						  	sessao.append("\"tema\": " + t + ", "); 
 						  
@@ -732,7 +719,7 @@ public class PEPParser extends Parser {
 		ExercContext _localctx = new ExercContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_exerc);
 		try {
-			setState(97);
+			setState(98);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
@@ -742,12 +729,13 @@ public class PEPParser extends Parser {
 				idExerc();
 				setState(94);
 				match(T__10);
+				 sessao.append(","); 
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(96);
+				setState(97);
 				idExerc();
 				}
 				break;
@@ -786,9 +774,9 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(99);
-			match(T__12);
 			setState(100);
+			match(T__12);
+			setState(101);
 			match(INT);
 			}
 		}
@@ -825,9 +813,9 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(102);
-			match(T__13);
 			setState(103);
+			match(T__13);
+			setState(104);
 			match(INT);
 			}
 		}
@@ -864,9 +852,9 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(105);
-			match(T__14);
 			setState(106);
+			match(T__14);
+			setState(107);
 			match(INT);
 			}
 		}
@@ -882,6 +870,7 @@ public class PEPParser extends Parser {
 	}
 
 	public static class IdExercContext extends ParserRuleContext {
+		public Token e;
 		public TerminalNode INT() { return getToken(PEPParser.INT, 0); }
 		public IdExercContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -903,10 +892,19 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(108);
-			match(T__9);
 			setState(109);
-			match(INT);
+			match(T__9);
+			setState(110);
+			((IdExercContext)_localctx).e = match(INT);
+			 
+							if(exs.contains((((IdExercContext)_localctx).e!=null?((IdExercContext)_localctx).e.getText():null))) {
+								sessao.append("{\"id\": \"E" + (((IdExercContext)_localctx).e!=null?((IdExercContext)_localctx).e.getText():null) + "\"}");
+							} else {
+								throw new RuntimeException("$$$$$$ ERRO $$$$$$");
+								//System.out.println("$$$$$$ ERRO $$$$$$");
+								//System.exit(1);
+							}
+						
 			}
 		}
 		catch (RecognitionException re) {
@@ -921,32 +919,32 @@ public class PEPParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24r\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24t\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\3\3\6\3*\n\3\r\3\16\3+\3\4\3\4\3\4\3\4\3\4\3\4\5\4\64\n\4\3\4"+
 		"\3\4\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3"+
 		"\t\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\5\13T\n\13\3\13\6\13W"+
-		"\n\13\r\13\16\13X\3\f\6\f\\\n\f\r\f\16\f]\3\r\3\r\3\r\3\r\5\rd\n\r\3\16"+
-		"\3\16\3\16\3\17\3\17\3\17\3\20\3\20\3\20\3\21\3\21\3\21\3\21\2\2\22\2"+
-		"\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\3\3\2\13\f\2g\2\"\3\2\2\2\4)"+
-		"\3\2\2\2\6-\3\2\2\2\b\67\3\2\2\2\n<\3\2\2\2\f>\3\2\2\2\16B\3\2\2\2\20"+
-		"G\3\2\2\2\22L\3\2\2\2\24V\3\2\2\2\26[\3\2\2\2\30c\3\2\2\2\32e\3\2\2\2"+
-		"\34h\3\2\2\2\36k\3\2\2\2 n\3\2\2\2\"#\7\3\2\2#$\5\32\16\2$%\5\4\3\2%&"+
-		"\7\4\2\2&\'\b\2\1\2\'\3\3\2\2\2(*\5\6\4\2)(\3\2\2\2*+\3\2\2\2+)\3\2\2"+
-		"\2+,\3\2\2\2,\5\3\2\2\2-.\7\5\2\2./\5\b\5\2/\60\5\f\7\2\60\61\5\16\b\2"+
-		"\61\63\5\20\t\2\62\64\5\22\n\2\63\62\3\2\2\2\63\64\3\2\2\2\64\65\3\2\2"+
-		"\2\65\66\b\4\1\2\66\7\3\2\2\2\678\5\34\17\289\7\6\2\29:\5\n\6\2:;\b\5"+
-		"\1\2;\t\3\2\2\2<=\7\24\2\2=\13\3\2\2\2>?\7\7\2\2?@\5\36\20\2@A\b\7\1\2"+
-		"A\r\3\2\2\2BC\7\b\2\2CD\b\b\1\2DE\5\24\13\2EF\b\b\1\2F\17\3\2\2\2GH\7"+
-		"\t\2\2HI\b\t\1\2IJ\5\26\f\2JK\b\t\1\2K\21\3\2\2\2LM\7\n\2\2MN\t\2\2\2"+
-		"NO\7\r\2\2OP\t\2\2\2PQ\b\n\1\2Q\23\3\2\2\2RT\7\16\2\2SR\3\2\2\2ST\3\2"+
-		"\2\2TU\3\2\2\2UW\5\30\r\2VS\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y\25"+
-		"\3\2\2\2Z\\\5\30\r\2[Z\3\2\2\2\\]\3\2\2\2][\3\2\2\2]^\3\2\2\2^\27\3\2"+
-		"\2\2_`\5 \21\2`a\7\r\2\2ad\3\2\2\2bd\5 \21\2c_\3\2\2\2cb\3\2\2\2d\31\3"+
-		"\2\2\2ef\7\17\2\2fg\7\23\2\2g\33\3\2\2\2hi\7\20\2\2ij\7\23\2\2j\35\3\2"+
-		"\2\2kl\7\21\2\2lm\7\23\2\2m\37\3\2\2\2no\7\f\2\2op\7\23\2\2p!\3\2\2\2"+
-		"\b+\63SX]c";
+		"\n\13\r\13\16\13X\3\f\6\f\\\n\f\r\f\16\f]\3\r\3\r\3\r\3\r\3\r\5\re\n\r"+
+		"\3\16\3\16\3\16\3\17\3\17\3\17\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21"+
+		"\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\3\3\2\13\f\2i\2\"\3"+
+		"\2\2\2\4)\3\2\2\2\6-\3\2\2\2\b\67\3\2\2\2\n<\3\2\2\2\f>\3\2\2\2\16B\3"+
+		"\2\2\2\20G\3\2\2\2\22L\3\2\2\2\24V\3\2\2\2\26[\3\2\2\2\30d\3\2\2\2\32"+
+		"f\3\2\2\2\34i\3\2\2\2\36l\3\2\2\2 o\3\2\2\2\"#\7\3\2\2#$\5\32\16\2$%\5"+
+		"\4\3\2%&\7\4\2\2&\'\b\2\1\2\'\3\3\2\2\2(*\5\6\4\2)(\3\2\2\2*+\3\2\2\2"+
+		"+)\3\2\2\2+,\3\2\2\2,\5\3\2\2\2-.\7\5\2\2./\5\b\5\2/\60\5\f\7\2\60\61"+
+		"\5\16\b\2\61\63\5\20\t\2\62\64\5\22\n\2\63\62\3\2\2\2\63\64\3\2\2\2\64"+
+		"\65\3\2\2\2\65\66\b\4\1\2\66\7\3\2\2\2\678\5\34\17\289\7\6\2\29:\5\n\6"+
+		"\2:;\b\5\1\2;\t\3\2\2\2<=\7\24\2\2=\13\3\2\2\2>?\7\7\2\2?@\5\36\20\2@"+
+		"A\b\7\1\2A\r\3\2\2\2BC\7\b\2\2CD\b\b\1\2DE\5\24\13\2EF\b\b\1\2F\17\3\2"+
+		"\2\2GH\7\t\2\2HI\b\t\1\2IJ\5\26\f\2JK\b\t\1\2K\21\3\2\2\2LM\7\n\2\2MN"+
+		"\t\2\2\2NO\7\r\2\2OP\t\2\2\2PQ\b\n\1\2Q\23\3\2\2\2RT\7\16\2\2SR\3\2\2"+
+		"\2ST\3\2\2\2TU\3\2\2\2UW\5\30\r\2VS\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2"+
+		"\2\2Y\25\3\2\2\2Z\\\5\30\r\2[Z\3\2\2\2\\]\3\2\2\2][\3\2\2\2]^\3\2\2\2"+
+		"^\27\3\2\2\2_`\5 \21\2`a\7\r\2\2ab\b\r\1\2be\3\2\2\2ce\5 \21\2d_\3\2\2"+
+		"\2dc\3\2\2\2e\31\3\2\2\2fg\7\17\2\2gh\7\23\2\2h\33\3\2\2\2ij\7\20\2\2"+
+		"jk\7\23\2\2k\35\3\2\2\2lm\7\21\2\2mn\7\23\2\2n\37\3\2\2\2op\7\f\2\2pq"+
+		"\7\23\2\2qr\b\21\1\2r!\3\2\2\2\b+\63SX]d";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

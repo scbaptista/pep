@@ -30,7 +30,7 @@ var validateLogin = function (){
 			if (email=="gestao@teste.com" && pass=="admin") {
 				window.location.href="home.html?user=admin";
 			}else if(email=="aluno@teste.com" && pass=="teste") {
-				window.location.href="home.html?user=aluno";
+				window.location.href="alunos_home.html?user=aluno";
 			}else{
 				document.getElementById("erroDivLogin").innerText  = "Sua password ou email estão errados";
 			}
@@ -38,6 +38,40 @@ var validateLogin = function (){
 
 	
 	
+}
+
+
+var newUser = function (){
+	
+	var name = document.getElementById("name").value; 
+	var pass = document.getElementById("pass").value; 
+	var passconf = document.getElementById("pass_conf").value;
+	var email = document.getElementById("email").value;
+
+
+	if( email==""    || email.indexOf('@')==-1  || email.indexOf('.')==-1 )	{
+			document.getElementById("erroDivLogin").innerText  = "Por favor, informe um EMAIL válido!";
+		
+	}else if(pass == passconf){
+		console.log('olaqwqw');
+		var token = '{"name":"'+name+'","email":"'+email+'","pass":"'+pass+'"}';
+		var tokenfinal = btoa(unescape(encodeURIComponent(token)));
+	
+		  var xhttp = new XMLHttpRequest();
+		  xhttp.onreadystatechange = function() {
+		      console.log(this.responseText);
+		    
+		  };
+		  xhttp.open("POST", "http://localhost:8081/PEP/serv/user?op=newuser&token="+tokenfinal, true);
+		  xhttp.send();
+		  
+		
+	}else{
+		document.getElementById("erroDivLogin").innerText  = "As passwords não são iguais";
+	}
+
+
+
 }
 
 var onLoadLoginPage = function (){
@@ -70,17 +104,12 @@ var loadPageIndex = function (){
     	if(token == 'aluno'){
     		document.getElementById("nameUser").innerText = token;	
     		document.getElementById("sessoes_admin").children[0].style.display = "none";
-    		document.getElementById("temas").children[0].style.display = "none";
-    		document.getElementById("resultados").children[0].style.display = "none";
-    		document.getElementById("questoes").children[0].style.display = "none";
-    		document.getElementById("home_admin").children[0].style.display = "none";
-    		setNewPage('../page/alunos_home.html');
+    		setNewPage('../page/sessoes_aluno.html');
 
     	}
     	if(token == 'admin'){
     		document.getElementById("sessoes_aluno").children[0].style.display = "none";
-    		document.getElementById("home_aluno").children[0].style.display = "none";
-    		setNewPage('../page/admin_home.html');
+    		setNewPage('../page/sessoes_admin.html');
     	}
     }
 

@@ -23,6 +23,7 @@
         <!-- jQuery -->
     <script src="../js/jquery.min.js"></script>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
 
   <body onload="onLoadLoginPage();">
@@ -63,14 +64,13 @@
         
         <div class="login-form">
           <form action="#" method="post">
-            <input type="text" name="name" placeholder="Full Name" required="">
-            <input type="text" name="username" placeholder="Username" required="">
-            <input type="text" name="email" placeholder="E-mail" required="">
-            <input type="text" name="contacto" placeholder="Contact" required="">
-            <input type="password" name="password" placeholder="Password" required="">
-            <input type="password" name="password" placeholder="Confirm Password" required="">
+            <input type="text" name="name" id="name" placeholder="Full Name" required="">
+            <input type="text" name="email" id="email" placeholder="E-mail" required="">
+            <input type="text" name="contacto" id="contacto" placeholder="Contact" required="">
+            <input type="password" name="password" id="pass" placeholder="Password" required="">
+            <input type="password" name="password" id="pass_conf" placeholder="Confirm Password" required="">
              <div>
-                <a class="btn btn-default submit" href="page/home.html">Submit</a>
+                <a class="btn btn-default submit" href="javascript:newUser();">Submit</a>
               </div>
           </form>
         </div>

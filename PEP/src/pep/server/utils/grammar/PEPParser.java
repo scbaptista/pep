@@ -3,9 +3,13 @@ package pep.server.utils.grammar;
 // Generated from PEP.g4 by ANTLR 4.7.1
 
     import java.util.*;
-    import java.sql.*;
-    import java.util.logging.Level;
-	import java.util.logging.Logger;
+    import java.util.List;
+	import java.util.Arrays;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+	import java.util.Map;
+	import java.io.ByteArrayOutputStream;
+	import java.io.PrintStream;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -25,8 +29,10 @@ public class PEPParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, WS=16, INT=17, 
-		STRING=18;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
+		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
+		T__31=32, WS=33, INT=34, STRING=35;
 	public static final int
 		RULE_plano = 0, RULE_sessoes = 1, RULE_sessao = 2, RULE_infoSessao = 3, 
 		RULE_titulo = 4, RULE_tema = 5, RULE_parteA = 6, RULE_parteE = 7, RULE_ordem = 8, 
@@ -39,12 +45,15 @@ public class PEPParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'Plano'", "'Fim'", "'SESS\uFFFDO'", "'-'", "'TEMA:'", "'PARTE A:'", 
-		"'PARTE E:'", "'ORDEM:'", "'A'", "'E'", "','", "'?'", "'P'", "'S'", "'T'"
+		null, "'P'", "'p'", "'L'", "'l'", "'A'", "'a'", "'N'", "'n'", "'O'", "'o'", 
+		"'F'", "'f'", "'I'", "'i'", "'M'", "'m'", "'S'", "'s'", "'E'", "'e'", 
+		"'\u00C3'", "'\u00E3'", "'-'", "'T'", "'t'", "':'", "'R'", "'r'", "'D'", 
+		"'d'", "','", "'?'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, "WS", "INT", "STRING"
+		null, null, null, null, null, null, null, null, null, null, null, null, 
+		null, null, null, null, null, null, null, null, null, "WS", "INT", "STRING"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -92,9 +101,13 @@ public class PEPParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	    ArrayList<String> sessoes, exs;
+		int i, err;
+	    HashMap<String, String> sessoes;
+	    ArrayList<String> exs, tms;
+	    ByteArrayOutputStream baos;
+	    PrintStream ps, oldOut, oldErr;
+	    String descr;
 	    StringBuilder sessao;
-	    int i, flagOrd;
 
 	public PEPParser(TokenStream input) {
 		super(input);
@@ -102,6 +115,10 @@ public class PEPParser extends Parser {
 	}
 	public static class PlanoContext extends ParserRuleContext {
 		public ArrayList<String> exercs;
+		public ArrayList<String> temas;
+		public String console;
+		public int error;
+		public HashMap<String, String> sessions;
 		public IdPlanoContext idPlano() {
 			return getRuleContext(IdPlanoContext.class,0);
 		}
@@ -109,9 +126,10 @@ public class PEPParser extends Parser {
 			return getRuleContext(SessoesContext.class,0);
 		}
 		public PlanoContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
-		public PlanoContext(ParserRuleContext parent, int invokingState, ArrayList<String> exercs) {
+		public PlanoContext(ParserRuleContext parent, int invokingState, ArrayList<String> exercs, ArrayList<String> temas) {
 			super(parent, invokingState);
 			this.exercs = exercs;
+			this.temas = temas;
 		}
 		@Override public int getRuleIndex() { return RULE_plano; }
 		@Override
@@ -124,24 +142,120 @@ public class PEPParser extends Parser {
 		}
 	}
 
-	public final PlanoContext plano(ArrayList<String> exercs) throws RecognitionException {
-		PlanoContext _localctx = new PlanoContext(_ctx, getState(), exercs);
+	public final PlanoContext plano(ArrayList<String> exercs,ArrayList<String> temas) throws RecognitionException {
+		PlanoContext _localctx = new PlanoContext(_ctx, getState(), exercs, temas);
 		enterRule(_localctx, 0, RULE_plano);
-		 i = 0; sessoes = new ArrayList<String>(); exs = new ArrayList<String>(exercs); 
+		 i = 0; err = 0;
+			     //sessoes = new ArrayList<String>();
+				 exs = exercs;
+				 tms = temas;
+				 sessoes = new HashMap<String, String>();
+				 
+				 // Alterar stream de erros e output
+				 baos = new ByteArrayOutputStream();
+				 ps = new PrintStream(baos);
+				 oldOut = System.out;
+				 oldErr = System.err;
+				 System.setOut(ps);
+				 System.setErr(ps);
+				
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(32);
-			match(T__0);
+			_la = _input.LA(1);
+			if ( !(_la==T__0 || _la==T__1) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			setState(33);
-			idPlano();
+			_la = _input.LA(1);
+			if ( !(_la==T__2 || _la==T__3) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			setState(34);
-			sessoes();
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__5) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			setState(35);
-			match(T__1);
+			_la = _input.LA(1);
+			if ( !(_la==T__6 || _la==T__7) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(36);
+			_la = _input.LA(1);
+			if ( !(_la==T__8 || _la==T__9) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(37);
+			idPlano();
+			setState(38);
+			sessoes();
+			setState(39);
+			_la = _input.LA(1);
+			if ( !(_la==T__10 || _la==T__11) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(40);
+			_la = _input.LA(1);
+			if ( !(_la==T__12 || _la==T__13) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(41);
+			_la = _input.LA(1);
+			if ( !(_la==T__14 || _la==T__15) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			 
-						   	 for(int j=0; j<i; j++)
-						   		System.out.println(sessoes.get(j));
+						     ((PlanoContext)_localctx).sessions =  sessoes;
+						   	 ((PlanoContext)_localctx).error =  err;
+						   	 ((PlanoContext)_localctx).console =  baos.toString();
+						   	 
+						   	 // Repor stream de erros e output
+						     System.out.flush();
+						     System.setOut(oldOut);
+						     System.setErr(oldErr);
 						   
 			}
 		}
@@ -184,20 +298,20 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(39); 
+			setState(45); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(38);
+				setState(44);
 				sessao();
 				}
 				}
-				setState(41); 
+				setState(47); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==T__2 );
+			} while ( _la==T__16 || _la==T__17 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -248,34 +362,93 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(43);
-			match(T__2);
-			setState(44);
-			infoSessao();
-			setState(45);
-			tema();
-			setState(46);
-			parteA();
-			setState(47);
-			parteE();
 			setState(49);
+			_la = _input.LA(1);
+			if ( !(_la==T__16 || _la==T__17) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(50);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(51);
+			_la = _input.LA(1);
+			if ( !(_la==T__16 || _la==T__17) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(52);
+			_la = _input.LA(1);
+			if ( !(_la==T__16 || _la==T__17) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(53);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__5) | (1L << T__20) | (1L << T__21))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(54);
+			_la = _input.LA(1);
+			if ( !(_la==T__8 || _la==T__9) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(55);
+			infoSessao();
+			setState(56);
+			tema();
+			setState(57);
+			parteA();
+			setState(58);
+			parteE();
+			setState(60);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__7) {
+			if (_la==T__8 || _la==T__9) {
 				{
-				setState(48);
+				setState(59);
 				ordem();
 				}
 			}
 
 			 
-						  	if (flagOrd == 0) {
-						  		sessao.append("\"ordem\": \"E, A\"");
-						  	}	
-						  	sessao.append("}");
-						  	sessoes.add(sessao.toString()); 
-						  	i++; 
-						  	flagOrd = 0; 
+						  	try {
+						  		//String value = new String(sessao.toString().getBytes("UTF-8"));
+						  		sessoes.put(descr, sessao.toString()); 
+						  	} catch (Exception ex) {
+						  		System.out.println("AnTLR error!");
+						  	}
+						  	i++;  
+						  	descr = new String();
 						  
 			}
 		}
@@ -319,14 +492,15 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(53);
+			setState(64);
 			idSessao();
-			setState(54);
-			match(T__3);
-			setState(55);
+			setState(65);
+			match(T__22);
+			setState(66);
 			((InfoSessaoContext)_localctx).titulo = titulo();
-			 // {"sessao": "Introdu��o a Arrays",
+			 // {"sessao": "Introdução a Arrays",
 					  	  	sessao.append("{\"sessao\": " + (((InfoSessaoContext)_localctx).titulo!=null?_input.getText(((InfoSessaoContext)_localctx).titulo.start,((InfoSessaoContext)_localctx).titulo.stop):null) + ", "); 
+					  	  	descr = (((InfoSessaoContext)_localctx).titulo!=null?_input.getText(((InfoSessaoContext)_localctx).titulo.start,((InfoSessaoContext)_localctx).titulo.stop):null);
 					  	  
 			}
 		}
@@ -363,7 +537,7 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(58);
+			setState(69);
 			match(STRING);
 			}
 		}
@@ -399,18 +573,54 @@ public class PEPParser extends Parser {
 	public final TemaContext tema() throws RecognitionException {
 		TemaContext _localctx = new TemaContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_tema);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(60);
-			match(T__4);
-			setState(61);
+			setState(71);
+			_la = _input.LA(1);
+			if ( !(_la==T__23 || _la==T__24) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(72);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(73);
+			_la = _input.LA(1);
+			if ( !(_la==T__14 || _la==T__15) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(74);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__5) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(75);
+			match(T__25);
+			setState(76);
 			idTema();
-			 
-						  	String t = "BD";
-						  	// "tema": "Arrays", 
-						  	sessao.append("\"tema\": " + t + ", "); 
-						  
 			}
 		}
 		catch (RecognitionException re) {
@@ -445,13 +655,74 @@ public class PEPParser extends Parser {
 	public final ParteAContext parteA() throws RecognitionException {
 		ParteAContext _localctx = new ParteAContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_parteA);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
-			match(T__5);
+			setState(78);
+			_la = _input.LA(1);
+			if ( !(_la==T__0 || _la==T__1) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(79);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__5) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(80);
+			_la = _input.LA(1);
+			if ( !(_la==T__26 || _la==T__27) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(81);
+			_la = _input.LA(1);
+			if ( !(_la==T__23 || _la==T__24) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(82);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(83);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__5) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(84);
+			match(T__25);
 			 sessao.append("\"partea\": {"); 
-			setState(66);
+			setState(86);
 			listaA();
 			 sessao.append("}, "); 
 			}
@@ -488,13 +759,74 @@ public class PEPParser extends Parser {
 	public final ParteEContext parteE() throws RecognitionException {
 		ParteEContext _localctx = new ParteEContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_parteE);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(69);
-			match(T__6);
+			setState(89);
+			_la = _input.LA(1);
+			if ( !(_la==T__0 || _la==T__1) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(90);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__5) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(91);
+			_la = _input.LA(1);
+			if ( !(_la==T__26 || _la==T__27) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(92);
+			_la = _input.LA(1);
+			if ( !(_la==T__23 || _la==T__24) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(93);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(94);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(95);
+			match(T__25);
 			 sessao.append("\"partee\": {"); 
-			setState(71);
+			setState(97);
 			listaE();
 			 sessao.append("}, "); 
 			}
@@ -534,12 +866,62 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(74);
-			match(T__7);
-			setState(75);
-			((OrdemContext)_localctx).x = _input.LT(1);
+			setState(100);
 			_la = _input.LA(1);
 			if ( !(_la==T__8 || _la==T__9) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(101);
+			_la = _input.LA(1);
+			if ( !(_la==T__26 || _la==T__27) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(102);
+			_la = _input.LA(1);
+			if ( !(_la==T__28 || _la==T__29) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(103);
+			_la = _input.LA(1);
+			if ( !(_la==T__18 || _la==T__19) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(104);
+			_la = _input.LA(1);
+			if ( !(_la==T__14 || _la==T__15) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(105);
+			match(T__25);
+			setState(106);
+			((OrdemContext)_localctx).x = _input.LT(1);
+			_la = _input.LA(1);
+			if ( !(_la==T__4 || _la==T__18) ) {
 				((OrdemContext)_localctx).x = (Token)_errHandler.recoverInline(this);
 			}
 			else {
@@ -547,12 +929,12 @@ public class PEPParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(76);
-			match(T__10);
-			setState(77);
+			setState(107);
+			match(T__30);
+			setState(108);
 			((OrdemContext)_localctx).y = _input.LT(1);
 			_la = _input.LA(1);
-			if ( !(_la==T__8 || _la==T__9) ) {
+			if ( !(_la==T__4 || _la==T__18) ) {
 				((OrdemContext)_localctx).y = (Token)_errHandler.recoverInline(this);
 			}
 			else {
@@ -561,7 +943,6 @@ public class PEPParser extends Parser {
 				consume();
 			}
 			 //	"ordem": "A, E" }
-						  	flagOrd = 1;
 						  	sessao.append("\"ordem\": \"" + (((OrdemContext)_localctx).x!=null?((OrdemContext)_localctx).x.getText():null) + ", " + (((OrdemContext)_localctx).y!=null?((OrdemContext)_localctx).y.getText():null) + "\""); 
 						  
 			}
@@ -605,30 +986,30 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84); 
+			setState(115); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(81);
+				setState(112);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__11) {
+				if (_la==T__31) {
 					{
-					setState(80);
-					match(T__11);
+					setState(111);
+					match(T__31);
 					}
 				}
 
-				setState(83);
+				setState(114);
 				exerc();
 				}
 				}
-				setState(86); 
+				setState(117); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==T__9 || _la==T__11 );
+			} while ( _la==T__18 || _la==T__31 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -670,20 +1051,20 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(89); 
+			setState(120); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(88);
+				setState(119);
 				exerc();
 				}
 				}
-				setState(91); 
+				setState(122); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==T__9 );
+			} while ( _la==T__18 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -719,23 +1100,23 @@ public class PEPParser extends Parser {
 		ExercContext _localctx = new ExercContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_exerc);
 		try {
-			setState(98);
+			setState(129);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(93);
+				setState(124);
 				idExerc();
-				setState(94);
-				match(T__10);
+				setState(125);
+				match(T__30);
 				 sessao.append(","); 
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(97);
+				setState(128);
 				idExerc();
 				}
 				break;
@@ -774,9 +1155,9 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(100);
-			match(T__12);
-			setState(101);
+			setState(131);
+			match(T__0);
+			setState(132);
 			match(INT);
 			}
 		}
@@ -813,9 +1194,9 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(103);
-			match(T__13);
-			setState(104);
+			setState(134);
+			match(T__16);
+			setState(135);
 			match(INT);
 			}
 		}
@@ -831,6 +1212,7 @@ public class PEPParser extends Parser {
 	}
 
 	public static class IdTemaContext extends ParserRuleContext {
+		public Token t;
 		public TerminalNode INT() { return getToken(PEPParser.INT, 0); }
 		public IdTemaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -852,10 +1234,19 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(106);
-			match(T__14);
-			setState(107);
-			match(INT);
+			setState(137);
+			match(T__23);
+			setState(138);
+			((IdTemaContext)_localctx).t = match(INT);
+			 
+							if(tms.contains((((IdTemaContext)_localctx).t!=null?((IdTemaContext)_localctx).t.getText():null))) {
+						  		// "tema": "Arrays", 
+						  		sessao.append("\"tema\": " + (((IdTemaContext)_localctx).t!=null?((IdTemaContext)_localctx).t.getText():null) + ", "); 
+							} else {
+								err = 1;
+								System.out.println("ERRO: O tema 'T" + (((IdTemaContext)_localctx).t!=null?((IdTemaContext)_localctx).t.getText():null) + "' não existe!");
+							}
+						
 			}
 		}
 		catch (RecognitionException re) {
@@ -892,17 +1283,16 @@ public class PEPParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(109);
-			match(T__9);
-			setState(110);
+			setState(141);
+			match(T__18);
+			setState(142);
 			((IdExercContext)_localctx).e = match(INT);
 			 
 							if(exs.contains((((IdExercContext)_localctx).e!=null?((IdExercContext)_localctx).e.getText():null))) {
 								sessao.append("{\"id\": \"E" + (((IdExercContext)_localctx).e!=null?((IdExercContext)_localctx).e.getText():null) + "\"}");
 							} else {
-								throw new RuntimeException("$$$$$$ ERRO $$$$$$");
-								//System.out.println("$$$$$$ ERRO $$$$$$");
-								//System.exit(1);
+								err = 1;
+								System.out.println("ERRO: O exercício 'E" + (((IdExercContext)_localctx).e!=null?((IdExercContext)_localctx).e.getText():null) + "' não existe!");
 							}
 						
 			}
@@ -919,32 +1309,44 @@ public class PEPParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\24t\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
-		"\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3\2\3\2"+
-		"\3\2\3\2\3\3\6\3*\n\3\r\3\16\3+\3\4\3\4\3\4\3\4\3\4\3\4\5\4\64\n\4\3\4"+
-		"\3\4\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3"+
-		"\t\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\5\13T\n\13\3\13\6\13W"+
-		"\n\13\r\13\16\13X\3\f\6\f\\\n\f\r\f\16\f]\3\r\3\r\3\r\3\r\3\r\5\re\n\r"+
-		"\3\16\3\16\3\16\3\17\3\17\3\17\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21"+
-		"\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\3\3\2\13\f\2i\2\"\3"+
-		"\2\2\2\4)\3\2\2\2\6-\3\2\2\2\b\67\3\2\2\2\n<\3\2\2\2\f>\3\2\2\2\16B\3"+
-		"\2\2\2\20G\3\2\2\2\22L\3\2\2\2\24V\3\2\2\2\26[\3\2\2\2\30d\3\2\2\2\32"+
-		"f\3\2\2\2\34i\3\2\2\2\36l\3\2\2\2 o\3\2\2\2\"#\7\3\2\2#$\5\32\16\2$%\5"+
-		"\4\3\2%&\7\4\2\2&\'\b\2\1\2\'\3\3\2\2\2(*\5\6\4\2)(\3\2\2\2*+\3\2\2\2"+
-		"+)\3\2\2\2+,\3\2\2\2,\5\3\2\2\2-.\7\5\2\2./\5\b\5\2/\60\5\f\7\2\60\61"+
-		"\5\16\b\2\61\63\5\20\t\2\62\64\5\22\n\2\63\62\3\2\2\2\63\64\3\2\2\2\64"+
-		"\65\3\2\2\2\65\66\b\4\1\2\66\7\3\2\2\2\678\5\34\17\289\7\6\2\29:\5\n\6"+
-		"\2:;\b\5\1\2;\t\3\2\2\2<=\7\24\2\2=\13\3\2\2\2>?\7\7\2\2?@\5\36\20\2@"+
-		"A\b\7\1\2A\r\3\2\2\2BC\7\b\2\2CD\b\b\1\2DE\5\24\13\2EF\b\b\1\2F\17\3\2"+
-		"\2\2GH\7\t\2\2HI\b\t\1\2IJ\5\26\f\2JK\b\t\1\2K\21\3\2\2\2LM\7\n\2\2MN"+
-		"\t\2\2\2NO\7\r\2\2OP\t\2\2\2PQ\b\n\1\2Q\23\3\2\2\2RT\7\16\2\2SR\3\2\2"+
-		"\2ST\3\2\2\2TU\3\2\2\2UW\5\30\r\2VS\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2"+
-		"\2\2Y\25\3\2\2\2Z\\\5\30\r\2[Z\3\2\2\2\\]\3\2\2\2][\3\2\2\2]^\3\2\2\2"+
-		"^\27\3\2\2\2_`\5 \21\2`a\7\r\2\2ab\b\r\1\2be\3\2\2\2ce\5 \21\2d_\3\2\2"+
-		"\2dc\3\2\2\2e\31\3\2\2\2fg\7\17\2\2gh\7\23\2\2h\33\3\2\2\2ij\7\20\2\2"+
-		"jk\7\23\2\2k\35\3\2\2\2lm\7\21\2\2mn\7\23\2\2n\37\3\2\2\2op\7\f\2\2pq"+
-		"\7\23\2\2qr\b\21\1\2r!\3\2\2\2\b+\63SX]d";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3%\u0094\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3"+
+		"\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\3\6\3\60\n\3\r\3\16\3\61\3\4"+
+		"\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4?\n\4\3\4\3\4\3\5\3\5\3\5"+
+		"\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3"+
+		"\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\n\3\n"+
+		"\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\13\5\13s\n\13\3\13\6\13v\n\13\r"+
+		"\13\16\13w\3\f\6\f{\n\f\r\f\16\f|\3\r\3\r\3\r\3\r\3\r\5\r\u0084\n\r\3"+
+		"\16\3\16\3\16\3\17\3\17\3\17\3\20\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3"+
+		"\21\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\21\3\2\3\4\3\2\5"+
+		"\6\3\2\7\b\3\2\t\n\3\2\13\f\3\2\r\16\3\2\17\20\3\2\21\22\3\2\23\24\3\2"+
+		"\25\26\4\2\7\b\27\30\3\2\32\33\3\2\35\36\3\2\37 \4\2\7\7\25\25\2\u0089"+
+		"\2\"\3\2\2\2\4/\3\2\2\2\6\63\3\2\2\2\bB\3\2\2\2\nG\3\2\2\2\fI\3\2\2\2"+
+		"\16P\3\2\2\2\20[\3\2\2\2\22f\3\2\2\2\24u\3\2\2\2\26z\3\2\2\2\30\u0083"+
+		"\3\2\2\2\32\u0085\3\2\2\2\34\u0088\3\2\2\2\36\u008b\3\2\2\2 \u008f\3\2"+
+		"\2\2\"#\t\2\2\2#$\t\3\2\2$%\t\4\2\2%&\t\5\2\2&\'\t\6\2\2\'(\5\32\16\2"+
+		"()\5\4\3\2)*\t\7\2\2*+\t\b\2\2+,\t\t\2\2,-\b\2\1\2-\3\3\2\2\2.\60\5\6"+
+		"\4\2/.\3\2\2\2\60\61\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\5\3\2\2\2\63"+
+		"\64\t\n\2\2\64\65\t\13\2\2\65\66\t\n\2\2\66\67\t\n\2\2\678\t\f\2\289\t"+
+		"\6\2\29:\5\b\5\2:;\5\f\7\2;<\5\16\b\2<>\5\20\t\2=?\5\22\n\2>=\3\2\2\2"+
+		">?\3\2\2\2?@\3\2\2\2@A\b\4\1\2A\7\3\2\2\2BC\5\34\17\2CD\7\31\2\2DE\5\n"+
+		"\6\2EF\b\5\1\2F\t\3\2\2\2GH\7%\2\2H\13\3\2\2\2IJ\t\r\2\2JK\t\13\2\2KL"+
+		"\t\t\2\2LM\t\4\2\2MN\7\34\2\2NO\5\36\20\2O\r\3\2\2\2PQ\t\2\2\2QR\t\4\2"+
+		"\2RS\t\16\2\2ST\t\r\2\2TU\t\13\2\2UV\t\4\2\2VW\7\34\2\2WX\b\b\1\2XY\5"+
+		"\24\13\2YZ\b\b\1\2Z\17\3\2\2\2[\\\t\2\2\2\\]\t\4\2\2]^\t\16\2\2^_\t\r"+
+		"\2\2_`\t\13\2\2`a\t\13\2\2ab\7\34\2\2bc\b\t\1\2cd\5\26\f\2de\b\t\1\2e"+
+		"\21\3\2\2\2fg\t\6\2\2gh\t\16\2\2hi\t\17\2\2ij\t\13\2\2jk\t\t\2\2kl\7\34"+
+		"\2\2lm\t\20\2\2mn\7!\2\2no\t\20\2\2op\b\n\1\2p\23\3\2\2\2qs\7\"\2\2rq"+
+		"\3\2\2\2rs\3\2\2\2st\3\2\2\2tv\5\30\r\2ur\3\2\2\2vw\3\2\2\2wu\3\2\2\2"+
+		"wx\3\2\2\2x\25\3\2\2\2y{\5\30\r\2zy\3\2\2\2{|\3\2\2\2|z\3\2\2\2|}\3\2"+
+		"\2\2}\27\3\2\2\2~\177\5 \21\2\177\u0080\7!\2\2\u0080\u0081\b\r\1\2\u0081"+
+		"\u0084\3\2\2\2\u0082\u0084\5 \21\2\u0083~\3\2\2\2\u0083\u0082\3\2\2\2"+
+		"\u0084\31\3\2\2\2\u0085\u0086\7\3\2\2\u0086\u0087\7$\2\2\u0087\33\3\2"+
+		"\2\2\u0088\u0089\7\23\2\2\u0089\u008a\7$\2\2\u008a\35\3\2\2\2\u008b\u008c"+
+		"\7\32\2\2\u008c\u008d\7$\2\2\u008d\u008e\b\20\1\2\u008e\37\3\2\2\2\u008f"+
+		"\u0090\7\25\2\2\u0090\u0091\7$\2\2\u0091\u0092\b\21\1\2\u0092!\3\2\2\2"+
+		"\b\61>rw|\u0083";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

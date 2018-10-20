@@ -5,63 +5,87 @@ grammar PEP;
 
 @header{
     import java.util.*;
-    import java.sql.*;
-    import java.util.logging.Level;
-	import java.util.logging.Logger;
+    import java.util.List;
+	import java.util.Arrays;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+	import java.util.Map;
+	import java.io.ByteArrayOutputStream;
+	import java.io.PrintStream;
 }
 
 @members {
-    ArrayList<String> sessoes, exs;
+	int i, err;
+    HashMap<String, String> sessoes;
+    ArrayList<String> exs, tms;
+    ByteArrayOutputStream baos;
+    PrintStream ps, oldOut, oldErr;
+    String descr;
     StringBuilder sessao;
-    int i, flagOrd;
 }
 
-plano[ArrayList<String> exercs]		
-@init  { i = 0; sessoes = new ArrayList<String>(); exs = new ArrayList<String>(exercs); }
-			: 'Plano' idPlano sessoes 'Fim' 						
+plano[ArrayList<String> exercs, ArrayList<String> temas]	
+returns [ String console, int error, HashMap<String, String> sessions]	
+@init  { i = 0; err = 0;
+	     //sessoes = new ArrayList<String>();
+		 exs = exercs;
+		 tms = temas;
+		 sessoes = new HashMap<String, String>();
+		 
+		 // Alterar stream de erros e output
+		 baos = new ByteArrayOutputStream();
+		 ps = new PrintStream(baos);
+		 oldOut = System.out;
+		 oldErr = System.err;
+		 System.setOut(ps);
+		 System.setErr(ps);
+		}
+			: ('P'|'p')('L'|'l')('A'|'a')('N'|'n')('O'|'o') idPlano sessoes ('F'|'f')('I'|'i')('M'|'m') 						
 			   { 
-			   	 for(int j=0; j<i; j++)
-			   		System.out.println(sessoes.get(j));
+			     $sessions = sessoes;
+			   	 $error = err;
+			   	 $console = baos.toString();
+			   	 
+			   	 // Repor stream de erros e output
+			     System.out.flush();
+			     System.setOut(oldOut);
+			     System.setErr(oldErr);
 			   }
 			;
 sessoes		: sessao+
 			;
-sessao		: 'SESS�O' infoSessao tema parteA parteE ordem?
+sessao		: ('S'|'s')('E'|'e')('S'|'s')('S'|'s')('Ã'|'ã'|'A'|'a')('O'|'o') infoSessao tema parteA parteE ordem?
 			  { 
-			  	if (flagOrd == 0) {
-			  		sessao.append("\"ordem\": \"E, A\"");
-			  	}	
-			  	sessao.append("}");
-			  	sessoes.add(sessao.toString()); 
-			  	i++; 
-			  	flagOrd = 0; 
+			  	try {
+			  		//String value = new String(sessao.toString().getBytes("UTF-8"));
+			  		sessoes.put(descr, sessao.toString()); 
+			  	} catch (Exception ex) {
+			  		System.out.println("AnTLR error!");
+			  	}
+			  	i++;  
+			  	descr = new String();
 			  }
 			;        
 infoSessao	
 @init  { sessao = new StringBuilder(); }
 			: idSessao '-' titulo
-		  	  { // {"sessao": "Introdu��o a Arrays",
+		  	  { // {"sessao": "Introdução a Arrays",
 		  	  	sessao.append("{\"sessao\": " + $titulo.text + ", "); 
+		  	  	descr = $titulo.text;
 		  	  }
 			;
 titulo		: STRING
 			;
-tema		: 'TEMA:' idTema
-			  { 
-			  	String t = "BD";
-			  	// "tema": "Arrays", 
-			  	sessao.append("\"tema\": " + t + ", "); 
-			  }
+tema		: ('T'|'t')('E'|'e')('M'|'m')('A'|'a')':' idTema
 			;
-parteA		: 'PARTE A:' { sessao.append("\"partea\": {"); } listaA { sessao.append("}, "); }
+parteA		: ('P'|'p')('A'|'a')('R'|'r')('T'|'t')('E'|'e') ('A'|'a')':' { sessao.append("\"partea\": {"); } listaA { sessao.append("}, "); }
 			  // "partea": {"id": "E1", "op": "no"},{"id": "E2", "op": "no"},{"id": "E3", "op": "yes"}, 
 			;
-parteE		: 'PARTE E:' { sessao.append("\"partee\": {"); } listaE { sessao.append("}, "); }
+parteE		:  ('P'|'p')('A'|'a')('R'|'r')('T'|'t')('E'|'e') ('E'|'e')':' { sessao.append("\"partee\": {"); } listaE { sessao.append("}, "); }
 			  //"partee": {{"id": "E18"},{"id": "E20"}},
 			;
-ordem		: 'ORDEM:' x=('A'|'E') ',' y=('A'|'E')
+ordem		: ('O'|'o')('R'|'r')('D'|'d')('E'|'e')('M'|'m')':' x=('A'|'E') ',' y=('A'|'E')
 			  { //	"ordem": "A, E" }
-			  	flagOrd = 1;
 			  	sessao.append("\"ordem\": \"" + $x.text + ", " + $y.text + "\""); 
 			  }
 			;
@@ -76,16 +100,24 @@ idPlano		: 'P'INT
 			;
 idSessao	: 'S'INT
 			;
-idTema		: 'T'INT
+idTema		: 'T' t=INT
+			{ 
+				if(tms.contains($t.text)) {
+			  		// "tema": "Arrays", 
+			  		sessao.append("\"tema\": " + $t.text + ", "); 
+				} else {
+					err = 1;
+					System.out.println("ERRO: O tema 'T" + $t.text + "' não existe!");
+				}
+			}
             ;
 idExerc		: 'E' e=INT 
 			{ 
 				if(exs.contains($e.text)) {
 					sessao.append("{\"id\": \"E" + $e.text + "\"}");
 				} else {
-					//throw new RuntimeException("$$$$$$ ERRO $$$$$$");
-					System.out.println("$$$$$$ ERRO $$$$$$");
-					System.exit(1);
+					err = 1;
+					System.out.println("ERRO: O exercício 'E" + $e.text + "' não existe!");
 				}
 			}
             ;

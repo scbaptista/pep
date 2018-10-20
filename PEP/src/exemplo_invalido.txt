@@ -1,11 +1,11 @@
 Plano P1
-	SESSÃO S1 - "Introdução a Arrays"
+	SESSAO S1 - "IntroduÃ§Ã£o a Arrays"
 		TEMA: T1
 		PARTE A: E1, E2, ?E3
 		PARTE E: E18, E20
 		ORDEM: A, E
-	SESSÃO S2 - "Declarando matrizes em Java"
+	SESSO S2 - "Declarando matrizes em Java"
 		TEMA: T10
-		PARTE A: E4, E2
+		PRTE A: E4, E2
 		PARTE E: E8
 Fim	

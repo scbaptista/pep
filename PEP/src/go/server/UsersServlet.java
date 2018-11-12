@@ -18,8 +18,8 @@ import com.google.gson.JsonParser;
 import go.object.SqlParams;
 import go.server.utils.STools;
 
-@WebServlet("/serv/tema")
-public class TemasServlet extends HttpServlet{
+@WebServlet("/serv/user")
+public class UsersServlet extends HttpServlet{
 
 	/**
 	 * note: servlet response by administrator temas
@@ -43,20 +43,23 @@ public class TemasServlet extends HttpServlet{
 		
 		PgConection con = null;
 		try {
-			
+			con = PgConection.getDBCon();
 			if(sqlprm.getSelect()){
 				String sql = "SELECT array_to_json(array_agg(row_to_json(t)))::text FROM (" + sqlprm.getSql() + ") t";
-				con = PgConection.getDBCon();
+				
 				ArrayList<Object> res = con.getObjectsSQL(sql, sqlprm.getParams());
 				if (res!=null && res.size()>0) {
 					STools.outputJson(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
 				}
 			}else{
-				con = PgConection.getDBCon();
 				ArrayList<Object> res = con.getObjectsSQL(sqlprm.getSql(), sqlprm.getParams());
 				if (res!=null && res.size()>0) {
-					STools.outputJson(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
+					STools.outputString(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
 				}
+			}
+			
+			if(con != null){
+				con.destroy();
 			}
 			
 		} catch (Exception e) {
@@ -86,34 +89,35 @@ public class TemasServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, decricao FROM infodat.tema Where id=?";
+			sql = "SELECT user_id, email, user_type, pass_word, nome, visivel, ativo FFROM appconf.users WHERE id=? ";
 			res.setParams(new Object[] {jobject.get("id").getAsInt()});
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO infodat.tema(designacao, descricao) values(?,?) RETURNING id ";
+			sql = "INSERT INTO appconf.users(nome, email, pass_word) values(?,?,?) RETURNING user_id ";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString()
+					jobject.get("nome").getAsString(), 
+					jobject.get("email").getAsString(),
+					jobject.get("pass").getAsString()
 			});
 			res.setSelect(false);
 			break;
 		case "3":
-			sql = "UPDATE infodat.tema SET designacao=?, descricao=? WHERE id=? RETURNING id";
+			sql = "UPDATE appconf.users SET nome=?, email=? WHERE id=? RETURNING user_id";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString(), 
+					jobject.get("nome").getAsString(), 
+					jobject.get("email").getAsString(), 
 					jobject.get("id").getAsInt()
 			});
 			res.setSelect(false);
 			break;
 		case "4":
-			sql = "DELETE FROM infodat.tema WHERE id=?";
+			sql = "DELETE FROM appconf.users WHERE user_id=?";
 			res.setParams(new Object[]{jobject.get("id").getAsInt()});
 			res.setSelect(false);
 			break;
 		case "5":
-			sql = "SELECT id, designacao, descricao FROM infodat.tema";
+			sql = "SELECT user_id, email, user_type, pass_word, nome, visivel, ativo FROM appconf.users";
 			res.setSelect(true);
 			break;
 		default:
@@ -124,5 +128,9 @@ public class TemasServlet extends HttpServlet{
 		return res;
 	}
 
+
+	
+	
+	
 	
 }

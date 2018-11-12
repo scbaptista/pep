@@ -18,8 +18,8 @@ import com.google.gson.JsonParser;
 import go.object.SqlParams;
 import go.server.utils.STools;
 
-@WebServlet("/serv/tema")
-public class TemasServlet extends HttpServlet{
+@WebServlet("/serv/exercicio")
+public class ExerciciosServlet extends HttpServlet{
 
 	/**
 	 * note: servlet response by administrator temas
@@ -32,6 +32,7 @@ public class TemasServlet extends HttpServlet{
 		doPost(request, response);
 	}
 	
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -39,8 +40,7 @@ public class TemasServlet extends HttpServlet{
 		String token = request.getParameter("token");
 		
 		SqlParams sqlprm = getSqlToList(request, op, token);
-		
-		
+				
 		PgConection con = null;
 		try {
 			
@@ -86,34 +86,43 @@ public class TemasServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, decricao FROM infodat.tema Where id=?";
+			sql = "SELECT id, designacao, dica, solucao, enunciado, dificuldade, autor  FROM infodat.exercicio WHERE id=?";
 			res.setParams(new Object[] {jobject.get("id").getAsInt()});
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO infodat.tema(designacao, descricao) values(?,?) RETURNING id ";
+			sql = "INSERT INTO infodat.exercicio(designacao, dica, solucao, enunciado, dificuldade, autor) values(?,?,?,?,?,?) RETURNING id ";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString()
+					jobject.get("designacao").getAsString(),
+					jobject.get("dica").getAsString(),
+					jobject.get("solucao").getAsString(),
+					jobject.get("enunciado").getAsString(),
+					jobject.get("dificuldade").getAsString(),
+					jobject.get("autor").getAsString(),
+					jobject.get("id").getAsInt()
 			});
 			res.setSelect(false);
 			break;
 		case "3":
-			sql = "UPDATE infodat.tema SET designacao=?, descricao=? WHERE id=? RETURNING id";
+			sql = "UPDATE infodat.exercicio SET designacao=?, dica=?, solucao=?, enunciado=?, dificuldade=?, autor=? WHERE id=? RETURNING id";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString(), 
+					jobject.get("designacao").getAsString(),
+					jobject.get("dica").getAsString(),
+					jobject.get("solucao").getAsString(),
+					jobject.get("enunciado").getAsString(),
+					jobject.get("dificuldade").getAsString(),
+					jobject.get("autor").getAsString(),
 					jobject.get("id").getAsInt()
 			});
 			res.setSelect(false);
 			break;
 		case "4":
-			sql = "DELETE FROM infodat.tema WHERE id=?";
+			sql = "DELETE FROM infodat.exercicio WHERE id=?";
 			res.setParams(new Object[]{jobject.get("id").getAsInt()});
 			res.setSelect(false);
 			break;
 		case "5":
-			sql = "SELECT id, designacao, descricao FROM infodat.tema";
+			sql = "SELECT id, designacao, dica, solucao, enunciado, dificuldade, autor FROM infodat.exercicio";
 			res.setSelect(true);
 			break;
 		default:

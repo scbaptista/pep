@@ -18,8 +18,8 @@ import com.google.gson.JsonParser;
 import go.object.SqlParams;
 import go.server.utils.STools;
 
-@WebServlet("/serv/tema")
-public class TemasServlet extends HttpServlet{
+@WebServlet("/serv/sessao")
+public class SessoesServlet extends HttpServlet{
 
 	/**
 	 * note: servlet response by administrator temas
@@ -31,6 +31,7 @@ public class TemasServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
+	
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,34 +87,36 @@ public class TemasServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, decricao FROM infodat.tema Where id=?";
+			sql = "SELECT id, designacao, cod_tema, cod_user, cod_ling, descricao  FROM infodat.sessao WHERE id=?";
 			res.setParams(new Object[] {jobject.get("id").getAsInt()});
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO infodat.tema(designacao, descricao) values(?,?) RETURNING id ";
-			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString()
-			});
-			res.setSelect(false);
+			try {
+				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), null, String.valueOf("1")));
+				res.setSelect(false);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			break;
 		case "3":
-			sql = "UPDATE infodat.tema SET designacao=?, descricao=? WHERE id=? RETURNING id";
-			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString(), 
-					jobject.get("id").getAsInt()
-			});
-			res.setSelect(false);
+			try {
+				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), null, String.valueOf("2")));
+				res.setSelect(false);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case "4":
-			sql = "DELETE FROM infodat.tema WHERE id=?";
+			sql = "DELETE FROM infodat.sessao WHERE id=?";
 			res.setParams(new Object[]{jobject.get("id").getAsInt()});
 			res.setSelect(false);
 			break;
 		case "5":
-			sql = "SELECT id, designacao, descricao FROM infodat.tema";
+			sql = "SELECT id, designacao, cod_tema, cod_user, cod_ling, descricao  FROM infodat.sessao";
 			res.setSelect(true);
 			break;
 		default:

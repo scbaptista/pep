@@ -12,6 +12,6 @@ public class AppConfig {
 	public static String DBSERVER = "localhost:5433";
 	public static String DBNAME = "pep";
 	public static String DBUSER = "postgres";
-	public static String DBPASS = "postgres";
+	public static String DBPASS = "sandra";
 	
 }

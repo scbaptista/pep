@@ -18,8 +18,8 @@ import com.google.gson.JsonParser;
 import go.object.SqlParams;
 import go.server.utils.STools;
 
-@WebServlet("/serv/tema")
-public class TemasServlet extends HttpServlet{
+@WebServlet("/serv/login")
+public class LoginServlet extends HttpServlet{
 
 	/**
 	 * note: servlet response by administrator temas
@@ -34,12 +34,11 @@ public class TemasServlet extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("ola1");
 		String op = request.getParameter("op");
 		String token = request.getParameter("token");
 		
 		SqlParams sqlprm = getSqlToList(request, op, token);
-		
 		
 		PgConection con = null;
 		try {
@@ -58,7 +57,7 @@ public class TemasServlet extends HttpServlet{
 					STools.outputJson(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
 				}
 			}
-			
+		
 		} catch (Exception e) {
 			throw new ServletException(e.getMessage());
 		} finally {
@@ -86,35 +85,7 @@ public class TemasServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, decricao FROM infodat.tema Where id=?";
-			res.setParams(new Object[] {jobject.get("id").getAsInt()});
-			res.setSelect(true);
-			break;
-		case "2":
-			sql = "INSERT INTO infodat.tema(designacao, descricao) values(?,?) RETURNING id ";
-			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString()
-			});
-			res.setSelect(false);
-			break;
-		case "3":
-			sql = "UPDATE infodat.tema SET designacao=?, descricao=? WHERE id=? RETURNING id";
-			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString(), 
-					jobject.get("id").getAsInt()
-			});
-			res.setSelect(false);
-			break;
-		case "4":
-			sql = "DELETE FROM infodat.tema WHERE id=?";
-			res.setParams(new Object[]{jobject.get("id").getAsInt()});
-			res.setSelect(false);
-			break;
-		case "5":
-			sql = "SELECT id, designacao, descricao FROM infodat.tema";
-			res.setSelect(true);
+
 			break;
 		default:
 			break;
@@ -124,5 +95,4 @@ public class TemasServlet extends HttpServlet{
 		return res;
 	}
 
-	
 }

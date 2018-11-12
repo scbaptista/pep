@@ -22,6 +22,15 @@ public class STools {
 	}
 	
 
+	
+	public static void outputString(HttpServletResponse response, String msg) throws IOException {
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+	    OutputStream os = response.getOutputStream();
+	    os.write(msg.getBytes("UTF-8"));
+		os.flush();
+		os.close();
+	}
 
 
 	

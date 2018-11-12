@@ -1,4 +1,32 @@
-      var Expand = function () {
+var doLogout = function(){
+  window.location.href="login.html";
+}
+
+
+var getModal = function(idModal){
+    console.log('btn');
+  // Get the modal
+  var modal = document.getElementById(idModal);
+  modal.style.display = "block";
+  // When the user clicks on <span> (x), close the modal
+  //span.onclick = function() {
+    //  modal.style.display = "none";
+  //}
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+}
+
+var getCanselBtn = function(idModal){
+  var modal = document.getElementById(idModal);
+  modal.style.display = "none";
+}
+
+var Expand = function () {
   var tile = $('.strips__strip');
   var tileLink = $('.strips__strip > .strip__content');
   var tileText = tileLink.find('.strip__inner-text');

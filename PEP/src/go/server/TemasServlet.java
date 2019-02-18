@@ -54,6 +54,7 @@ public class TemasServlet extends HttpServlet{
 			}else{
 				con = PgConection.getDBCon();
 				ArrayList<Object> res = con.getObjectsSQL(sqlprm.getSql(), sqlprm.getParams());
+				
 				if (res!=null && res.size()>0) {
 					STools.outputJson(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
 				}
@@ -72,44 +73,48 @@ public class TemasServlet extends HttpServlet{
 	
 	private SqlParams getSqlToList(HttpServletRequest request, String op, String token) throws UnsupportedEncodingException {
 		
-		String dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+		String dToken = null;
+		JsonElement jelement = null;
+		JsonObject jobject = null;
 		
-		System.out.println("dToken -> "+dToken);
-		
-		JsonElement jelement = new JsonParser().parse(dToken);
-	    JsonObject jobject = jelement.getAsJsonObject();
-	    
-	    
+		if(token != null) {
+			dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+			
+			System.out.println("dToken -> "+dToken);
+			
+			jelement = new JsonParser().parse(dToken);
+		    jobject = jelement.getAsJsonObject();
+		}
 	    
 		SqlParams res = new SqlParams();
 		String sql = "";
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, decricao FROM infodat.tema Where id=?";
-			res.setParams(new Object[] {jobject.get("id").getAsInt()});
+			sql = "SELECT id, designacao, descricao FROM infodat.tema Where id=?";
+			res.setParams(new Object[] {Integer.valueOf(jobject.get("id").getAsString().toString())});
 			res.setSelect(true);
 			break;
 		case "2":
 			sql = "INSERT INTO infodat.tema(designacao, descricao) values(?,?) RETURNING id ";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString()
+					jobject.get("designacao").getAsString().toString(), 
+					jobject.get("descricao").getAsString().toString()
 			});
 			res.setSelect(false);
 			break;
 		case "3":
 			sql = "UPDATE infodat.tema SET designacao=?, descricao=? WHERE id=? RETURNING id";
 			res.setParams(new Object[] {
-					jobject.get("designacao").getAsString(), 
-					jobject.get("descricao").getAsString(), 
-					jobject.get("id").getAsInt()
+					jobject.get("designacao").getAsString().toString(), 
+					jobject.get("descricao").getAsString().toString(), 
+					Integer.valueOf(jobject.get("id").getAsString().toString())
 			});
 			res.setSelect(false);
 			break;
 		case "4":
 			sql = "DELETE FROM infodat.tema WHERE id=?";
-			res.setParams(new Object[]{jobject.get("id").getAsInt()});
+			res.setParams(new Object[]{Integer.valueOf(jobject.get("id").getAsString().toString())});
 			res.setSelect(false);
 			break;
 		case "5":

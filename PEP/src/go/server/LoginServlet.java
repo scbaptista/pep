@@ -71,12 +71,18 @@ public class LoginServlet extends HttpServlet{
 	
 	private SqlParams getSqlToList(HttpServletRequest request, String op, String token) throws UnsupportedEncodingException {
 		
-		String dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+		String dToken = null;
+		JsonElement jelement = null;
+		JsonObject jobject = null;
 		
-		System.out.println("dToken -> "+dToken);
-		
-		JsonElement jelement = new JsonParser().parse(dToken);
-	    JsonObject jobject = jelement.getAsJsonObject();
+		if(token != null) {
+			dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+			
+			System.out.println("dToken -> "+dToken);
+			
+			jelement = new JsonParser().parse(dToken);
+		    jobject = jelement.getAsJsonObject();
+		}
 	    
 	    
 	    
@@ -85,7 +91,16 @@ public class LoginServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-
+			sql = "SELECT u.user_id, u.username, u.name, u.email, u.user_type as user_type_id, t.designacao as user_type FROM appconf.users AS u ";
+			sql = sql + " LEFT JOIN param.type_user as t ON u.user_type = t.id ";
+			sql = sql + " WHERE (email like ? or username like ?) and pass_word like ? ";
+			
+			res.setParams(new Object[] {
+					jobject.get("user_login").getAsString(), 
+					jobject.get("user_login").getAsString(), 
+					jobject.get("user_pass").getAsString(),
+			});
+			res.setSelect(true);
 			break;
 		default:
 			break;

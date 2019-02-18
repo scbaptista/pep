@@ -75,14 +75,18 @@ public class UsersServlet extends HttpServlet{
 	
 	private SqlParams getSqlToList(HttpServletRequest request, String op, String token) throws UnsupportedEncodingException {
 		
-		String dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+		String dToken = null;
+		JsonElement jelement = null;
+		JsonObject jobject = null;
 		
-		System.out.println("dToken -> "+dToken);
-		
-		JsonElement jelement = new JsonParser().parse(dToken);
-	    JsonObject jobject = jelement.getAsJsonObject();
-	    
-	    
+		if(token != null) {
+			dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+			
+			System.out.println("dToken -> "+dToken);
+			
+			jelement = new JsonParser().parse(dToken);
+		    jobject = jelement.getAsJsonObject();
+		}
 	    
 		SqlParams res = new SqlParams();
 		String sql = "";
@@ -94,9 +98,10 @@ public class UsersServlet extends HttpServlet{
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO appconf.users(nome, email, pass_word) values(?,?,?) RETURNING user_id ";
+			sql = "INSERT INTO appconf.users(name, username, email, pass_word) values(?,?,?,?) RETURNING user_id ";
 			res.setParams(new Object[] {
-					jobject.get("nome").getAsString(), 
+					jobject.get("name").getAsString(),
+					jobject.get("username").getAsString(),
 					jobject.get("email").getAsString(),
 					jobject.get("pass").getAsString()
 			});

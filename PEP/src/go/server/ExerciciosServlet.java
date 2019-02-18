@@ -72,14 +72,19 @@ public class ExerciciosServlet extends HttpServlet{
 	
 	private SqlParams getSqlToList(HttpServletRequest request, String op, String token) throws UnsupportedEncodingException {
 		
-		String dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+		String dToken = null;
+		JsonElement jelement = null;
+		JsonObject jobject = null;
 		
-		System.out.println("dToken -> "+dToken);
-		
-		JsonElement jelement = new JsonParser().parse(dToken);
-	    JsonObject jobject = jelement.getAsJsonObject();
-	    
-	    
+		if(token != null) {
+			dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+			
+			System.out.println("dToken -> "+dToken);
+			
+			jelement = new JsonParser().parse(dToken);
+		    jobject = jelement.getAsJsonObject();
+		}
+		  
 	    
 		SqlParams res = new SqlParams();
 		String sql = "";
@@ -91,27 +96,24 @@ public class ExerciciosServlet extends HttpServlet{
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO infodat.exercicio(designacao, dica, solucao, enunciado, dificuldade, autor) values(?,?,?,?,?,?) RETURNING id ";
+			sql = "INSERT INTO infodat.exercicio(designacao, dica, solucao, enunciado, dificuldade) values(?,?,?,?,?) RETURNING id ";
 			res.setParams(new Object[] {
 					jobject.get("designacao").getAsString(),
 					jobject.get("dica").getAsString(),
-					jobject.get("solucao").getAsString(),
+					jobject.get("solucao").getAsString().getBytes().toString(),
 					jobject.get("enunciado").getAsString(),
-					jobject.get("dificuldade").getAsString(),
-					jobject.get("autor").getAsString(),
-					jobject.get("id").getAsInt()
+					jobject.get("dificuldade").getAsString()
 			});
 			res.setSelect(false);
 			break;
 		case "3":
-			sql = "UPDATE infodat.exercicio SET designacao=?, dica=?, solucao=?, enunciado=?, dificuldade=?, autor=? WHERE id=? RETURNING id";
+			sql = "UPDATE infodat.exercicio SET designacao='?', dica='?', solucao='?', enunciado='?', dificuldade='?' WHERE id=? RETURNING id";
 			res.setParams(new Object[] {
 					jobject.get("designacao").getAsString(),
 					jobject.get("dica").getAsString(),
 					jobject.get("solucao").getAsString(),
 					jobject.get("enunciado").getAsString(),
 					jobject.get("dificuldade").getAsString(),
-					jobject.get("autor").getAsString(),
 					jobject.get("id").getAsInt()
 			});
 			res.setSelect(false);

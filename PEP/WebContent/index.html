@@ -1,412 +1,131 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" >
 
 <head>
-
   <meta charset="UTF-8">
-  <title>Teste</title>
-  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <title>PEP</title>
   
-  <link rel="stylesheet" href="css/normalize.min.css">
+  
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+      <link rel="stylesheet" href="css/login_style.css">
 
-  <!-- Bootstrap -->
-  <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
-  <script>
-    window.console = window.console || function(t) {};
-  </script>
-    
-  <script>
-    if (document.location.search.match(/type=embed/gi)) {
-      window.parent.postMessage("resize", "*");
-    }
-  </script>
-
-  <style type="text/css">
-    /* The Modal (background) */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 20; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-
-    /* Modal Content */
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-    }
-  </style>
-
+  
 </head>
 
-<body translate="no">
+<body>
 
-  <section class="strips">
-
-    <article class="strips__strip" onclick="getListSessaoBtn();">
-      <div class="strip__content">
-        <h1 class="strip__title" data-name="Lorem">Sessões</h1>
-        <div class="strip__inner-text">
-          <h2>Sessões</h2>
-            <header class="panel-heading">
-              Adicionar nova Sessões <a class="btn btn-success" href="#" id="btnAddSessoes" onclick="javascript:getModal('addSessaoModal', 'btnAddSessoes');"><i class="fa fa-plus-circle"></i></a>
-            </header>
-            <div id="tableSessao" style="overflow: auto; overflow-y: hidden;"></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="strips__strip" onclick="getListTemasBtn();">
-      <div class="strip__content">
-        <h1 class="strip__title" data-name="Ipsum">Temas</h1>
-        <div class="strip__inner-text">
-          <h2>Temas</h2>
-            <header class="panel-heading">
-              Adicionar novo Tema <a class="btn btn-success" href="#" id="btnAddTema" onclick="javascript:getModal('addTemaModal', 'btnAddTema');"><i class="fa fa-plus-circle"></i></a>
-            </header>
-            <div id="tableTema" style="overflow: auto; overflow-y: hidden;"></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="strips__strip" onclick="getListExerciciosBtn();">
-      <div class="strip__content">
-        <h1 class="strip__title" data-name="Dolor">Exercícios</h1>
-        <div class="strip__inner-text">
-          <h2>Exercícios</h2>
-            <header class="panel-heading">
-              Adicionar novo Exercícios <a class="btn btn-success" href="#" id="btnAddExercicio" onclick="javascript:getModal('addExercicioModal', 'btnAddExercicio');"><i class="fa fa-plus-circle"></i></a>
-            </header>
-            <div id="tableExercicio" style="overflow: auto; overflow-y: hidden;"></div>
-        </div>
-      </div>
-    </article>
-
-    <article>
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            
-            <ul class="nav navbar-nav">
-                <li>
-                  <div class="username mt-1">
-                    <h4 class="mb-1" style="color: black;">Sandra Baptista</h4>
-                    <h6 class="text-muted">Super Admin</h6>
-                  </div>
-                </li>
-              <li>
-                <a class="dropdown-item" href="#" onclick="javascript:doLogout();"><em class="fa fa-power-off mr-1" style="color: red;"></em> Logout</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-    </article>
-
-    <i class="fa fa-close strip__close"></i>
-  </section>
-
-
-<div id="msgSessaoModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <label id="msgSessaoResult"></label>
-    <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-10">
-        <button class="btn btn-default" type="button" id="msgSessaoClose" style="float: right;" onclick="javascript:getMsgCanselBtn('msgSessaoModal');">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="msgTemaModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <label id="msgTemaResult"></label>
-    <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-10">
-        <button class="btn btn-default" type="button" id="msgTemaClose" style="float: right;" onclick="javascript:getTemaMsgCanselBtn('msgTemaModal');">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="msgExercicioModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <label id="msgExercicioResult"></label>
-    <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-10">
-        <button class="btn btn-default" type="button" id="msgExercicioClose"  style="float: right;" onclick="javascript:getExercicioMsgCanselBtn('msgExercicioModal');">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div id="addTemaModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="temaForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Designação<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="temaDesg" name="" minlength="5" type="text" required />
+          <!-- LOGIN MODULE -->
+        <div class="login">
+            <div class="wrap">
+                <!-- TOGGLE -->
+                <div id="toggle-wrap">
+                    <div id="toggle-terms">
+                        <div id="cross">
+                            <span></span>
+                            <span></span>
+                        </div>
                     </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Descrição<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="temaDes" name="" minlength="5" type="text" required />
+                </div>
+                <!-- TERMS -->
+                <div class="terms">
+                    <iframe src="docs/pp.pdf"></iframe>
+                </div>
+
+                <!-- RECOVERY -->
+                <div class="recovery">
+                    <h2>Password Recovery</h2>
+                    <p>Enter either the <strong>email address</strong> or <strong>username</strong> on the account and <strong>click Submit</strong></p>
+                    <p>We'll email instructions on how to reset your password.</p>
+                    <form class="recovery-form" action="" method="post">
+                        <input type="text" class="input" id="user_recover" placeholder="Enter Email or Username Here">
+                        <input type="submit" class="button" value="Submit">
+                    </form>
+                    <p class="mssg">An email has been sent to you with further instructions.</p>
+                </div>
+
+                <!-- SLIDER -->
+                <div class="content">
+                    <!-- LOGO -->
+                    <div class="logo">
+                        <a href="#"><img src="images/logo.png" alt=""></a>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="temaSave" style="float: right;" onclick="javascript:addTemaBtn('addTemaModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="temaClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('addTemaModal');">Cancel</button>
+                    <!-- SLIDESHOW -->
+                    <div id="slideshow">
+                        <div class="one">
+                            <h2><span>Session</span></h2>
+                            <p>.........</p>
+                        </div>
+                        <div class="two">
+                            <h2><span>Exercices</span></h2>
+                            <p>...........</p>
+                        </div>
+                        <div class="three">
+                            <h2><span>Themes</span></h2>
+                            <p>...........</p>
+                        </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+                </div>
+                <!-- LOGIN FORM -->
+                <div class="user">
+                    <!-- ACTIONS
+                    <div class="actions">
+                        <a class="help" href="#signup-tab-content">Sign Up</a><a class="faq" href="#login-tab-content">Login</a>
+                    </div>
+                    -->
+                    <div class="form-wrap">
+                        <!-- TABS -->
+                    	<div class="tabs">
+                            <h3 class="login-tab"><a class="log-in active" href="#login-tab-content"><span>Login<span></a></h3>
+                    		<h3 class="signup-tab"><a class="sign-up" href="#signup-tab-content"><span>Sign Up</span></a></h3>
+                    	</div>
+                        <!-- TABS CONTENT -->
+                    	<div class="tabs-content">
+                            <!-- TABS CONTENT LOGIN -->
+                    		<div id="login-tab-content" class="active">
+                    			<form class="login-form" action="" method="post">
+                    				<input type="text" class="input" id="user_login" autocomplete="off" placeholder="Email or Username">
+                    				<input type="password" class="input" id="user_pass" autocomplete="off" placeholder="Password">
+                    				<input type="submit" class="button" value="Login" style="float: right;" onclick="javascript:dologin();">
+                    			</form>
+                    			<div class="help-action" style="margin-top: 90%;">
+                    				<p><i class="fa fa-arrow-left" aria-hidden="true"></i><a class="forgot" href="#">Forgot your password?</a></p>
+                    			</div>
+                    		</div>
+                            <!-- TABS CONTENT SIGNUP -->
+                    		<div id="signup-tab-content">
+                    			<form class="signup-form" action="" method="post">
+                                    <input type="checkbox" class="checkbox"  id="aluno_id" onclick="javascript:setCheckboxAluno();">
+                                    <label for="aluno_id">Student</label>
+                                    <input type="checkbox" class="checkbox"  id="professor_id"  onclick="javascript:setCheckboxProfessor();">
+                                    <label for="professor_id">Teacher</label>
+                                    <input type="name" class="input" id="user_name" autocomplete="off" placeholder="Name">
+                    				<input type="email" class="input" id="user_email" autocomplete="off" placeholder="Email">
+                    				<input type="text" class="input" id="username" autocomplete="off" placeholder="Username">
+                                    <input type="password" class="input" id="user_pass" autocomplete="off" placeholder="Password">
+                                    <div class="help-action">
+                                            <input type="checkbox" class="checkbox"  id="agree_terms">
+                                            <label for="agree_terms"><a class="agree" href="#">Terms of service</a></label>
+                                    </div>
+                    				<input type="submit" class="button" value="Sign Up" style="float: right;" onclick="javascript:doregist();">
+                    			</form>
+                    			
+                    		</div>
+                    	</div>
+                	</div>
+                </div>
             </div>
         </div>
-      </div>
-    </section>
-  </div>
-</div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+  
+
+    <script  src="js/login_server.js"></script>
+    <script  src="js/login.js"></script>
+    <script src="js/session.js"></script>
 
 
-<div id="editTemaModal" class="modal" >
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="temaForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Designação<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="edittemaDesg" name="" minlength="5" type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Descrição<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="edittemaDes" name="" minlength="5" type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="edittemaSave" style="float: right;" onclick="javascript:updateTemaBtn('editTemaModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="edittemaClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('editTemaModal');">Cancel</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-        </div>
-      </div>
-    </section>
-  </div>
-</div>
 
-
-<div id="addExercicioModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="exercicioForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Designação<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="exDesg" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Dica</label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="exDica" name=""  type="text" />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Solução<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="exSolucao" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Enunciado<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="exEnunciado" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Nivel de Dificuldade</label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="exNivel" name=""  type="text" />
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="exercicioSave" style="float: right;" onclick="javascript:addExercicioBtn('addExercicioModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="exercicioClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('addExercicioModal');">Cancel</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-        </div>        
-      </div>
-    </section>
-  </div>
-</div>
-
-<div id="editExercicioModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="exercicioForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Designação<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="editExDesg" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Dica</label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="editExDica" name=""  type="text" />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Solução<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="editExSolucao" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Enunciado<span class="required">*</span></label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="editExEnunciado" name=""  type="text" required />
-                    </div>
-                  </div>
-                  <div class="form-group ">
-                    <label for="cname" class="control-label col-lg-2">Nivel de Dificuldade</label>
-                    <div class="col-lg-10">
-                      <input class="form-control"  id="editExNivel" name=""  type="text" />
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="exercicioSave" style="float: right;" onclick="javascript:updateExercicioBtn('editExercicioModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="exercicioClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('editExercicioModal');">Cancel</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-        </div>        
-      </div>
-    </section>
-  </div>
-</div>
-
-
-<div id="addSessaoModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="sessaoForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <div class="col-lg-10">
-                      <textarea rows="10" cols="120" id="sessaoD" name="sessaoD"></textarea>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="sessaoSave" style="float: right;" onclick="javascript:addSessaoBtn('addSessaoModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="sessaoClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('addSessaoModal');">Cancel</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-        </div>        
-      </div>
-    </section>
-  </div>
-</div>
-
-
-<div id="editSessaoModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <section id="sessaoForm" >
-      <div class="row">
-        <div class="col-lg-12" style="width: 90%;">
-            <div class="panel-body">
-              <div class="form">
-                <form class="form-validate form-horizontal" id="feedback_form" method="get" action="">
-                  <div class="form-group ">
-                    <div class="col-lg-10">
-                      <textarea rows="10" cols="120" id="editSessaoD" name="sessaoD"></textarea>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                      <button class="btn btn-primary" type="submit" id="editSessaoSave" style="float: right;" onclick="javascript:updateSessaoBtn('editSessaoModal');">Save</button>
-                      <button class="btn btn-default" type="button" id="editSessaoClose" style="float: right; margin-right: 8px;" onclick="javascript:getCanselBtn('editSessaoModal');">Cancel</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-        </div>        
-      </div>
-    </section>
-  </div>
-</div>
-
-<script src="js/jquery.min.js"></script>
-<script src="js/stopExecutionOnTimeout.js"></script>
-<script src="js/bootstrap.min.js"></script>
-
-<script src="js/config.js"></script>
-<script src="js/temas.js"></script>
-<script src="js/exercicio.js"></script>
-<script src="js/sessoes.js"></script>
-
- </body>
+</body>
 
 </html>

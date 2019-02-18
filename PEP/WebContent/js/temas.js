@@ -51,6 +51,7 @@ var getListTemasBtn = function(idModal){
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			
 		  var obj = JSON.parse(this.responseText);
 		  var resutHeader = '<div class="table-wrapper-scroll-y"><table class="table table-bordered table-striped">'
 		  +'<tbody><tr>'
@@ -68,7 +69,7 @@ var getListTemasBtn = function(idModal){
             +'<tr>'
                 +'<td>'+obj[i].id+'</td>'
                 +'<td>'+obj[i].designacao+'</td>'
-                +'<td>'+obj[i].decricao+'</td>'
+                +'<td>'+obj[i].descricao+'</td>'
                 +'<td>'
                 	+'<div class="btn-group">'
                 		+'<a class="btn btn-primary" href="#" onclick="javascript:editTemaBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fa fa-edit"></i></a>'
@@ -78,7 +79,13 @@ var getListTemasBtn = function(idModal){
             +'</tr>';   
 		  }
 		  var resultFinal = (resutHeader + resultContent + resultFooter);
-		  document.getElementById('tableTema').innerHTML = resultFinal;
+		  
+		  if (obj.length == 0) {
+			  document.getElementById('tableTema').innerHTML = 'No results ....';
+		  }else{
+			  document.getElementById('tableTema').innerHTML = resultFinal;
+		  }
+		  
 
 		}
 	};
@@ -118,7 +125,7 @@ var editTemaBtn = function(id){
 			var obj = JSON.parse(this.responseText);
 			console.log(obj);
 			document.getElementById('edittemaDesg').value = obj[0].designacao;
-			document.getElementById('edittemaDes').value = obj[0].decricao;
+			document.getElementById('edittemaDes').value = obj[0].descricao;
 			document.getElementById('editTemaModal').setAttribute('name',id);
 			getModal('editTemaModal');
 		}

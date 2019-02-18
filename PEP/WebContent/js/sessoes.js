@@ -103,8 +103,13 @@ var getListSessaoBtn = function(idModal){
             +'</tr>';   
 		  }
 		  var resultFinal = (resutHeader + resultContent + resultFooter);
-		  document.getElementById('tableSessao').innerHTML = resultFinal;
 
+		  if (obj.length == 0) {
+			  document.getElementById('tableSessao').innerHTML = 'No results ....';
+		  }else{
+			  document.getElementById('tableSessao').innerHTML = resultFinal;
+		  }
+		  
 		}
 	};
 

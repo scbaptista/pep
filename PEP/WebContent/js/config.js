@@ -1,7 +1,9 @@
 var doLogout = function(){
-  window.location.href="login.html";
+	sessionStorage.clear();
+	window.location.href = warUrl;
 }
 
+var docHeigth =  $( document ).height();
 
 var getModal = function(idModal){
     console.log('btn');

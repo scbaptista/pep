@@ -73,14 +73,18 @@ public class SessoesServlet extends HttpServlet{
 	
 	private SqlParams getSqlToList(HttpServletRequest request, String op, String token) throws UnsupportedEncodingException {
 		
-		String dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+		String dToken = null;
+		JsonElement jelement = null;
+		JsonObject jobject = null;
 		
-		System.out.println("dToken -> "+dToken);
-		
-		JsonElement jelement = new JsonParser().parse(dToken);
-	    JsonObject jobject = jelement.getAsJsonObject();
-	    
-	    
+		if(token != null) {
+			dToken = (new String(Base64.getDecoder().decode(token), "UTF-8"));
+			
+			System.out.println("dToken -> "+dToken);
+			
+			jelement = new JsonParser().parse(dToken);
+		    jobject = jelement.getAsJsonObject();
+		}
 	    
 		SqlParams res = new SqlParams();
 		String sql = "";

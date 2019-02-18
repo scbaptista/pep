@@ -27,40 +27,77 @@ var getListExerciciosBtn = function(idModal){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+      var r = this.responseText;
       var obj = JSON.parse(this.responseText);
+
       var resutHeader = '<div class="table-wrapper-scroll-y"><table class="table table-bordered table-striped">'
       +'<tbody><tr>'
-      +'<th><i class="icon_profile" id="idExer"></i> ID</th>'
+      +'<th style="display:none;"><i class="icon_profile" id="idExer"></i> ID</th>'
       +'<th><i class="icon_profile"></i> Designação</th>'
-      +'<th><i class="icon_profile"></i> Dica</th>'
-      +'<th><i class="icon_profile"></i> Solução</th>'
-      +'<th><i class="icon_profile"></i> Enunciado</th>'
       +'<th><i class="icon_profile"></i> Nivel de Dificuldade</th>'
       +'<th><i class="icon_cogs"></i></th>'
       +'</tr>';
+      
+      var resutHeaderAluno = '<div class="table-wrapper-scroll-y"><table class="table table-bordered table-striped">'
+          +'<tbody><tr>'
+          +'<th style="display:none;"><i class="icon_profile" id="idExer"></i> ID</th>'
+          +'<th><i class="icon_profile"></i> Designação</th>'
+          +'<th><i class="icon_cogs"></i></th>'
+          +'</tr>';
 
       var resultContent = '';
 
       var resultFooter = '</tbody> </table></div>';
-      for (i in obj) {
-            resultContent = resultContent
-            +'<tr>'
-                +'<td>'+obj[i].id+'</td>'
-                +'<td>'+obj[i].designacao+'</td>'
-                +'<td>'+obj[i].dica+'</td>'
-                +'<td>'+obj[i].solucao+'</td>'
-                +'<td>'+obj[i].enunciado+'</td>'
-                +'<td>'+obj[i].dificuldade+'</td>'
-                +'<td>'
-                  +'<div class="btn-group">'
-                    +'<a class="btn btn-primary" href="#" onclick="javascript:editExercicioBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fa fa-edit"></i></a>'
-                        +'<a class="btn btn-danger" href="#" onclick="javascript:removeExercicioBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fa fa-trash"></i></a>'
-                    +'</div>'
-                +'</td>'
-            +'</tr>';   
-      }
-      var resultFinal = (resutHeader + resultContent + resultFooter);
-      document.getElementById('tableExercicio').innerHTML = resultFinal;
+      var sessionVal = JSON.parse(sessionStorage.getItem("appSession"));
+      
+      if (sessionVal[0].user_type_id == 3) {
+        for (i in obj) {
+          resultContent = resultContent
+          +'<tr>'
+              +'<td style="display:none;">'+obj[i].id+'</td>'
+              +'<td>'+obj[i].designacao+'</td>'
+              +'<td>'
+                +'<div class="btn-group">'
+                  +'<a class="btn btn-primary" href="#" onclick="javascript:runExercicioBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fas fa-arrow-alt-circle-right"></i></a>'
+                +'</div>'
+              +'</td>'
+          +'</tr>';   
+        }
+        var resultFinal = (resutHeaderAluno + resultContent + resultFooter);
+        console.log(obj.length);
+        console.log(obj);
+        if (obj.length == 0) {
+        	 document.getElementById('tableExercicioAluno').innerHTML = 'No results ....';
+        }else{
+          document.getElementById('tableExercicioAluno').innerHTML = resultFinal;
+        }
+      }else{
+
+        for (i in obj) {
+          resultContent = resultContent
+          +'<tr>'
+              +'<td style="display:none;">'+obj[i].id+'</td>'
+              +'<td>'+obj[i].designacao+'</td>'
+              +'<td>'+obj[i].dificuldade+'</td>'
+              +'<td>'
+                +'<div class="btn-group">'
+                  +'<a class="btn btn-primary" href="#" onclick="javascript:editExercicioBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fa fa-edit"></i></a>'
+                  +'<a class="btn btn-danger" href="#" onclick="javascript:removeExercicioBtn('+obj[i].id+');" id="'+obj[i].id+'"><i class="fa fa-trash"></i></a>'
+                  +'<a class="btn btn-primary" href="#" onclick="javascript:viewExercicioBtn('+obj[i]+');" id="'+obj[i].id+'"><i class="fa fa-eye"></i></a>'
+                +'</div>'
+              +'</td>'
+          +'</tr>';   
+        }
+        var resultFinal = (resutHeader + resultContent + resultFooter);
+        console.log(obj.length);
+        console.log(obj);
+        if (obj.length == 0) {
+        	 document.getElementById('tableExercicio').innerHTML = 'No results ....';
+        }else{
+        	document.getElementById('tableExercicio').innerHTML = resultFinal;
+        }
+        
+      } 
 
     }
   };
@@ -113,10 +150,44 @@ var removeExercicioBtn = function(id){
   xhttp.send();
 }
 
+var runExercicioBtn = function (id) {
+
+  
+	var json = {'id':id};
+
+	  var token = btoa(unescape(encodeURIComponent(JSON.stringify(json))));
+
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+        
+        var obj = JSON.parse(this.responseText);
+
+        var text = "public class YourClassNameHere { "
+        + "public static void main(String[] args) {"
+        + obj[0].solucao
+        + " } "
+        + "}";
+
+        
+        var res = encodeURIComponent(text);
+        var url = "http://pythontutor.com/java.html#code="+res+"&cumulative=false&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=java&rawInputLstJSON=%5B%5D&textReferences=true";
+        console.log(url);
+        document.getElementById('debugExercicio').setAttribute('src',url);
+        getModal('debugExercicioModal');
+
+	    }
+	  };
+
+	  xhttp.open("POST", "http://localhost:8080/PEP/serv/exercicio?op=1&token="+token, false);
+	  xhttp.send();
+
+
+}
 
 var editExercicioBtn = function(id){
   var json = {'id':id};
-console.log(id);
+  console.log(id);
   var token = btoa(unescape(encodeURIComponent(JSON.stringify(json))));
 
   var xhttp = new XMLHttpRequest();
@@ -169,3 +240,5 @@ var updateExercicioBtn = function(idModal){
   xhttp.open("POST", "http://localhost:8080/PEP/serv/exercicio?op=3&token="+token, false);
   xhttp.send();
 }
+
+

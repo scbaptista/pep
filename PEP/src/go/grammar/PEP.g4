@@ -149,4 +149,3 @@ UNICODE_ESC
 fragment
 HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') 
     ;
-

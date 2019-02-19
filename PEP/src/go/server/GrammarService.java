@@ -24,7 +24,8 @@ public class GrammarService {
 	private final static String jsonFim = "\"}";
     
 	@SuppressWarnings("rawtypes")
-	public String parse(String plano, String id, String op) throws Exception {
+	public String parse(String plano, String id, String op, String user_id) throws Exception {
+		System.out.println("teste0");
 		String queryEx = "SELECT id FROM infodat.exercicio";
 		String queryTm = "SELECT id FROM infodat.tema";
 		
@@ -46,12 +47,17 @@ public class GrammarService {
 	        
 	        try {
 	        	
-	        	
-	        	
+	        	System.out.println("teste1");
+	        	System.out.println("temas: " +temas);
+	        	System.out.println("exers: "+exers);
 	        	// Invocar AnTLR
 	        	PlanoContext pContext = parser.plano(exers,temas);
+	        	System.out.println("teste2  ->1");
 	        	String cons = pContext.console;
+	        	System.out.println("teste2  ->2");
 	        	int err = pContext.error;
+	        	
+	        	System.out.println("teste2  ->");
 	        	
 	        	if(err == 0 && cons.trim().isEmpty()) {
 	        		HashMap<String, String> sessoes = pContext.sessions;
@@ -61,11 +67,12 @@ public class GrammarService {
 	        	    while(iterator.hasNext()) {
 	        	    	Map.Entry mentry = (Map.Entry)iterator.next();
 	        	    	String query = null;
-	        	    	
+	        	    	System.out.println("teste2");
 	        	    	switch (op) {
 	        			case "1":
-	        				query = "INSERT INTO infodat.sessao (designacao, info_sessao) VALUES ('" + mentry.getKey() + "', '" + mentry.getValue() + "')";
-			        	    con.executeSQL(query);
+	        				query = "INSERT INTO infodat.sessao (designacao, info_sessao, user_id) VALUES ('" + mentry.getKey() + "', '" + mentry.getValue() + "',"+Integer.valueOf(user_id.toString())+")";
+			        	    System.out.println(query);
+	        				con.executeSQL(query);
 	        				break;
 	        			case "2":
 	        				query = "UPDATE infodat.sessao SET designacao="+mentry.getKey()+", info_sessao="+ mentry.getValue()+" Where id="+id+" RETURNING id";

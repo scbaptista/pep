@@ -260,6 +260,7 @@ public class PEPParser extends Parser {
 			}
 		}
 		catch (RecognitionException re) {
+			
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);

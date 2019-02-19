@@ -1,0 +1,11 @@
+PlaNo P1
+	SeSsão S1 - "Introdução a Arrays"
+		Tema: T1
+		Parte A: E1, ?E2
+		Parte E: E1, E2
+		Ordem: A, E
+	SeSsaO S2 - "Declarando matrizes em Java"
+		Tema: T1
+		Parte A: E1, E2
+		Parte E: E1
+FIM	

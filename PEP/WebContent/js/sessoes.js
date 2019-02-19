@@ -33,7 +33,9 @@ var getSessaoSaveBtn = function(idModal){
 
 var addSessaoBtn = function(idModal){
 	var des = document.getElementById("sessaoD").value; 
-	var json = {'des':des};
+	var obj = JSON.parse(sessionStorage.getItem("appSession"));
+//	console.log(obj[0].name);
+	var json = {'des':des, 'user_id':obj[0].user_id};
 
 	var token = btoa(unescape(encodeURIComponent(JSON.stringify(json))));
 
@@ -120,6 +122,11 @@ var getListSessaoBtn = function(idModal){
 
 var editSessaoBtn = function(id){
 	var json = {'id':id};
+	
+//	var des = document.getElementById("editSessaoD").value; 
+//	var obj = JSON.parse(sessionStorage.getItem("appSession"));
+//	console.log(obj);
+//	var json = {'des':des, 'user_id':obj[0].id};
 
 	var token = btoa(unescape(encodeURIComponent(JSON.stringify(json))));
 

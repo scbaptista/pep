@@ -52,6 +52,8 @@ public class SessoesServlet extends HttpServlet{
 				if (res!=null && res.size()>0) {
 					STools.outputJson(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
 				}
+			}else if (sqlprm.getMsg() != null)  {
+				STools.outputString(response, sqlprm.getMsg());
 			}else{
 				con = PgConection.getDBCon();
 				ArrayList<Object> res = con.getObjectsSQL(sqlprm.getSql(), sqlprm.getParams());
@@ -91,13 +93,19 @@ public class SessoesServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, cod_tema, cod_user, cod_ling, descricao  FROM infodat.sessao WHERE id=?";
+			sql = "SELECT id, designacao, info_sessao, user_id  FROM infodat.sessao WHERE id=?";
 			res.setParams(new Object[] {jobject.get("id").getAsInt()});
 			res.setSelect(true);
 			break;
 		case "2":
 			try {
-				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), null, String.valueOf("1")));
+				System.out.println("aqui ->   ");
+				String user_id = String.valueOf(jobject.get("user_id").getAsInt());
+				System.out.println("aqui ->   user_id: "+user_id);
+				String msg = new GrammarService().parse("", null, String.valueOf("1"),user_id);
+				System.out.println("aqui ->   msg: "+msg);
+				
+				res.setMsg(msg);
 				res.setSelect(false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -107,7 +115,7 @@ public class SessoesServlet extends HttpServlet{
 			break;
 		case "3":
 			try {
-				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), null, String.valueOf("2")));
+				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), jobject.get("id").getAsString(), String.valueOf("2"),jobject.get("user_id").getAsString()));
 				res.setSelect(false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -120,7 +128,7 @@ public class SessoesServlet extends HttpServlet{
 			res.setSelect(false);
 			break;
 		case "5":
-			sql = "SELECT id, designacao, cod_tema, cod_user, cod_ling, descricao  FROM infodat.sessao";
+			sql = "SELECT id, designacao, info_sessao, user_id  FROM infodat.sessao";
 			res.setSelect(true);
 			break;
 		default:

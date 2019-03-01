@@ -520,22 +520,22 @@ a.button:hover {
     background-size: cover;
 }
 #slideshow .one {
-    background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/dots.png");
+/*     background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/dots.png"); */
     background-repeat: no-repeat;
     background-position: 0% 50%;
 }
 #slideshow .two {
-    background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/gears.png");
+/*     background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/gears.png"); */
     background-repeat: no-repeat;
     background-position: 0% 50%;
 }
 #slideshow .three {
-    background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/splat.png");
+/*     background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/splat.png"); */
     background-repeat: no-repeat;
     background-position: 0% 5%;
 }
 #slideshow .four {
-    background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/ray.png");
+/*     background-image: url("http://res.cloudinary.com/dpcloudinary/image/upload/v1506186248/ray.png"); */
     background-repeat: no-repeat;
     background-position: 0% 50%;
 }

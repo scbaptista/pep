@@ -17,6 +17,7 @@ import com.google.gson.JsonParser;
 
 import go.object.SqlParams;
 import go.server.utils.STools;
+import go.server.utils.SendMail;
 
 @WebServlet("/serv/user")
 public class UsersServlet extends HttpServlet{
@@ -54,7 +55,16 @@ public class UsersServlet extends HttpServlet{
 			}else{
 				ArrayList<Object> res = con.getObjectsSQL(sqlprm.getSql(), sqlprm.getParams());
 				if (res!=null && res.size()>0) {
-					STools.outputString(response, (res.get(0)!=null ? (String)res.get(0) : "[]"));
+					if(sqlprm.getMail() && sqlprm.getMailTo() != null &&  sqlprm.getMsgMail() != null && sqlprm.getSubjectMail() != null) {
+						SendMail.send(sqlprm.getMailTo(), sqlprm.getSubjectMail(), sqlprm.getMsgMail());
+					}
+					
+					if(sqlprm.getMailAdmin() && sqlprm.getMailToAdmin()!= null && sqlprm.getMsgMailAdmin() != null && sqlprm.getSubjectMail() != null) {
+						SendMail.send(sqlprm.getMailToAdmin(), sqlprm.getSubjectMail(), sqlprm.getMsgMailAdmin());
+					}
+					
+					STools.outputString(response, (res.get(0)!=null ? String.valueOf(res.get(0)) : "[]"));
+					
 				}
 			}
 			
@@ -93,19 +103,28 @@ public class UsersServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT user_id, email, user_type, pass_word, nome, visivel, ativo FFROM appconf.users WHERE id=? ";
+			sql = "SELECT user_id, email, user_type, pass_word, nome, visivel, ativo, rgpd FFROM appconf.users WHERE id=? ";
 			res.setParams(new Object[] {jobject.get("id").getAsInt()});
 			res.setSelect(true);
 			break;
 		case "2":
-			sql = "INSERT INTO appconf.users(name, username, email, pass_word) values(?,?,?,?) RETURNING user_id ";
-			res.setParams(new Object[] {
-					jobject.get("name").getAsString(),
+			sql = "INSERT INTO appconf.users(name, email, user_type, username, pass_word, ativo, rgpd) values(?,?,?,?,?,?,?) RETURNING user_id ";
+			res.setParams(new Object[] {				
+					jobject.get("user_name").getAsString(),
+					jobject.get("user_email").getAsString(),
+					Integer.valueOf(jobject.get("user_type").getAsInt()),
 					jobject.get("username").getAsString(),
-					jobject.get("email").getAsString(),
-					jobject.get("pass").getAsString()
+					jobject.get("user_pass").getAsString(),
+					Integer.valueOf(jobject.get("ativo").getAsInt()),
+					jobject.get("rgpd").getAsBoolean()
 			});
 			res.setSelect(false);
+			res.setMail(true);
+			res.setMailTo(jobject.get("user_email").getAsString());
+			res.setMsgMail("O sei registo foi efetuado com sucesso...\n\n"+(jobject.get("user_type").getAsString().equals("1")?"O seu registo está pendente de uma validação por parta da administração da plataforma.\nQuando poder utilizar a sua conta receberá outros email.":""));
+			res.setSubjectMail("PEP - Novo Registo");
+			res.setMailAdmin(true);
+			res.setMsgMailAdmin("Caro Admin,\n\nHouve um novo registo na plataforma que necessita da sua validação.\n\nPara validar basta aceder à sua área de administração.");
 			break;
 		case "3":
 			sql = "UPDATE appconf.users SET nome=?, email=? WHERE id=? RETURNING user_id";
@@ -123,6 +142,18 @@ public class UsersServlet extends HttpServlet{
 			break;
 		case "5":
 			sql = "SELECT user_id, email, user_type, pass_word, nome, visivel, ativo FROM appconf.users";
+			res.setSelect(true);
+			break;
+		case "6":
+			sql = "SELECT u.user_id, u.username, u.name, u.email, u.user_type as user_type_id, t.designacao as user_type FROM appconf.users AS u ";
+			sql = sql + " LEFT JOIN param.type_user as t ON u.user_type = t.id ";
+			sql = sql + " WHERE (email like ? or username like ?) and pass_word like ? ";
+			
+			res.setParams(new Object[] {
+					jobject.get("user_login").getAsString(), 
+					jobject.get("user_login").getAsString(), 
+					jobject.get("user_pass").getAsString(),
+			});
 			res.setSelect(true);
 			break;
 		default:

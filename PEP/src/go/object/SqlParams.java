@@ -7,6 +7,13 @@ public class SqlParams {
 	Integer privilegeType;
 	Boolean select;
 	String msg;
+	Boolean Mail;
+	String MailTo;
+	String MsgMail;
+	String SubjectMail;
+	String MailToAdmin;
+	Boolean MailAdmin;
+	String MsgMailAdmin;
 	
 	public SqlParams(){ 
 		this.setPrivilegeType(4);
@@ -56,4 +63,61 @@ public class SqlParams {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+
+	public Boolean getMail() {
+		return Mail;
+	}
+
+	public void setMail(Boolean mail) {
+		Mail = mail;
+	}
+
+	public String getMailTo() {
+		return MailTo;
+	}
+
+	public void setMailTo(String mailTo) {
+		MailTo = mailTo;
+	}
+
+	public String getMsgMail() {
+		return MsgMail;
+	}
+
+	public void setMsgMail(String msgMail) {
+		MsgMail = msgMail;
+	}
+
+	public String getSubjectMail() {
+		return SubjectMail;
+	}
+
+	public void setSubjectMail(String subjectMail) {
+		SubjectMail = subjectMail;
+	}
+
+	public String getMailToAdmin() {
+		return MailToAdmin;
+	}
+
+	public void setMailToAdmin(String mailToAdmin) {
+		MailToAdmin = mailToAdmin;
+	}
+
+	public Boolean getMailAdmin() {
+		return MailAdmin;
+	}
+
+	public void setMailAdmin(Boolean mailAdmin) {
+		MailAdmin = mailAdmin;
+	}
+
+	public String getMsgMailAdmin() {
+		return MsgMailAdmin;
+	}
+
+	public void setMsgMailAdmin(String msgMailAdmin) {
+		MsgMailAdmin = msgMailAdmin;
+	}
+
 }

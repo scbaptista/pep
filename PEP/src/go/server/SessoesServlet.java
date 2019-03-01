@@ -99,10 +99,8 @@ public class SessoesServlet extends HttpServlet{
 			break;
 		case "2":
 			try {
-				System.out.println("aqui ->   ");
 				String user_id = String.valueOf(jobject.get("user_id").getAsInt());
-				System.out.println("aqui ->   user_id: "+user_id);
-				String msg = new GrammarService().parse("", null, String.valueOf("1"),user_id);
+				String msg = new GrammarService().parse(jobject.get("des").getAsString(), null, String.valueOf("1"),user_id);
 				System.out.println("aqui ->   msg: "+msg);
 				
 				res.setMsg(msg);
@@ -115,7 +113,7 @@ public class SessoesServlet extends HttpServlet{
 			break;
 		case "3":
 			try {
-				res.setMsg(new GrammarService().parse(jobject.get("").getAsString(), jobject.get("id").getAsString(), String.valueOf("2"),jobject.get("user_id").getAsString()));
+				res.setMsg(new GrammarService().parse(jobject.get("des").getAsString(), jobject.get("id").getAsString(), String.valueOf("2"),jobject.get("user_id").getAsString()));
 				res.setSelect(false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

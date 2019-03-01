@@ -16,7 +16,10 @@
   <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-  
+ 
+  <link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="css/style_setp.css">
 
   <script>
     window.console = window.console || function(t) {};
@@ -52,6 +55,10 @@
         border: 1px solid #888;
         width: 80%;
     }
+    #bodyStep{height: 75%; margin-top: -4%;}
+
+    .glyphicon {top:25% !important}
+
   </style>
 
 </head>
@@ -60,13 +67,12 @@
 
   <section class="strips">
 
-    <article class="strips__strip" onclick="getListSessaoBtn();">
+    <article class="strips__strip" onclick="javascript:getListSessaoBtn();">
       <div class="strip__content">
         <h1 class="strip__title" data-name="Lorem">Sessões</h1>
         <div class="strip__inner-text">
-          <h2>Sessões</h2>
-
-            <div id="tableSessao" style="overflow: auto; overflow-y: hidden;"></div>
+          <h3>Sessões</h3>
+          <div id="tableSessaoAluno" style="overflow: auto; overflow-y: hidden;"></div>
         </div>
       </div>
     </article>
@@ -99,7 +105,7 @@
                   </div>
                 </li>
               <li>
-                <a class="dropdown-item" href="#" onclick="javascript:doLogout();"><em class="fa fa-power-off mr-1" style="color: red;"></em> Logout</a>
+                <a class="dropdown-item"  onclick="javascript:doLogout();"><em class="fa fa-power-off mr-1" style="color: red;"></em> Logout</a>
               </li>
             </ul>
           </div>
@@ -140,11 +146,122 @@
   <div class="modal-content">
     <section id="exercicioForm" >
         <div>
-           <iframe id="debugExercicio" style="width: 100%; height: 100%;" ></iframe>
+           <iframe id="debugExercicio" style="width: 100%; height: 100%; border: none;" ></iframe>
         </div>
     </section>
   </div>
 </div>
+
+
+<div id="runSessaoModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <section>  
+          <h3 id="temaSessaoRun" style="text-align: center;"></h3>
+          <div class="wizard">
+            <div class="wizard-inner">
+                <div class="connecting-line"></div>
+                <ul class="nav nav-tabs" role="tablist">
+
+                    <li role="presentation" class="active">
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                            <span class="round-tab">
+                                <i class="fas fa-bug" style="margin-top: 25%;"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <form role="form" >
+                <div class="tab-content">
+                    <div class="tab-pane active" role="tabpanel" id="step1" >
+                        <div id="bodyStep">
+                            <h3>Exercicios</h3>
+                            <p>Escolha o que pretende executar.</p>
+                            <div id="tableExercicioSessaoAluno" style="overflow: auto; overflow-y: hidden;"></div>
+
+                        </div>
+                        <div id="footerStep">
+                          <ul class="list-inline pull-right">
+                              <li><button type="button" class="btn btn-primary next-step" onclick="javascript:getExToBeRun();">Seguinte</button></li>
+                          </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step2">
+                        <div id="bodyStep">
+                            <h3>Enunciado</h3>
+                            <p>Resolva o exercicio.</p>
+                            <form class="signup-form" id="signup-form" action="" method="">
+                                <label id="lblEnunciado"></label>
+                                <br>
+                                <textarea rows="4" cols="50" id="txtExercicio" autocomplete="off" style="width: 100%; height: 70%;" ></textarea>
+                              </form>
+                        </div>
+                        <div id="footerStep">
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-default prev-step">voltar</button></li>
+                                <li><button type="button" class="btn btn-primary btn-info-full next-step" onclick="javascript:getExToBeDebug();">Seguinte</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step3">
+                        <div id="bodyStep">
+                            <h3>Debug exercicio</h3>
+                            <iframe id="debugExercicioSessao" style="width: 100%; height: 88%; border: none;" ></iframe>
+                        </div>
+                        <div id="footerStep">
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-default prev-step">voltar</button></li>
+                                <li><button type="button" class="btn btn-primary btn-info-full next-step">Seguinte</button></li>
+                            </ul>
+                        </div>                       
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="complete">
+                        <div id="bodyStep">
+                            <h3>Concluir</h3>
+                            <p>Pretendo submeter o exercicio ? Se sim clique no botão a baixo.</p>
+                            
+                        </div>
+                        <div id="footerStep">
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button></li>
+                                <li><button type="button" class="btn btn-success btn-info-full" onclick="javascript:registExFinalSessaoFeito();">Submeter</button></li>
+                            </ul>
+                        </div>   
+                        
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </section>
+    </div>
+  </div>
 
 
 
@@ -158,6 +275,11 @@
 <script src="js/sessoes.js"></script>
 <script src="js/session.js"></script>
 
+<!-- End Multi step form -->
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
+    <script  src="js/setp.js"></script>
+
+
 <script>
 
 $( document ).ready(function() {
@@ -170,7 +292,11 @@ $( document ).ready(function() {
     $('.modal-content').css("height", size);
     
     $("#debugExercicio").contents().find("#experimentalHeader").css("display","none");
-	 console.log($("#debugExercicio").contents().find("#experimentalHeader"));
+   console.log($("#debugExercicio").contents().find("#experimentalHeader"));
+
+   $("#debugExercicioSessao").contents().find("#experimentalHeader").css("display","none");
+   console.log($("#debugExercicioSessao").contents().find("#experimentalHeader"));
+
     
 });
 
@@ -180,6 +306,7 @@ $( document ).ready(function() {
 <script>
 console.log('teste1');
 $( "#debugExercicio" ).contents().find( "#experimentalHeader" ).css("display","none" );
+$( "#debugExercicioSessao" ).contents().find( "#experimentalHeader" ).css("display","none" );
 </script>
 
  </body>

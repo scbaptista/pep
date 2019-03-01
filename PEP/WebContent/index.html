@@ -34,14 +34,14 @@
 
                 <!-- RECOVERY -->
                 <div class="recovery">
-                    <h2>Password Recovery</h2>
-                    <p>Enter either the <strong>email address</strong> or <strong>username</strong> on the account and <strong>click Submit</strong></p>
-                    <p>We'll email instructions on how to reset your password.</p>
+                    <h2>Recuperar Password</h2>
+                    <p>Incira o seu <strong>endereço de email </strong> ou <strong>username</strong> e click <strong>Submit</strong></p>
+                    <p>Irá receber um email com a informação necessária.</p>
                     <form class="recovery-form" action="" method="post">
                         <input type="text" class="input" id="user_recover" placeholder="Enter Email or Username Here">
                         <input type="submit" class="button" value="Submit">
                     </form>
-                    <p class="mssg">An email has been sent to you with further instructions.</p>
+                    <p class="mssg">Foi-lhe enviado um email com uma password temporária.</p>
                 </div>
 
                 <!-- SLIDER -->
@@ -55,15 +55,23 @@
                         <div class="one">
                             <h2><span>PEP</span></h2>
                             <h3>Plataforma para suporte ao Ensino da Programação</h3>
-                            <p>Para minorar as dificuldades que os alunos de informática</p>
+                            <p>PEP é um sistema de informação baseado na Web que premite aos alunos fazerem sessões de auto-estudo em case acompanhado sempre pelo docente que preparar as 
+                                sessões.
+                            </p>
                         </div>
                         <div class="two">
-                            <h2><span>Exercices</span></h2>
-                            <p>...........</p>
+                            <h2><span>Professores</span></h2>
+                            <p></p>
                         </div>
                         <div class="three">
-                            <h2><span>Themes</span></h2>
-                            <p>...........</p>
+                            <h2><span>Alunos</span></h2>
+                            <p></p>
+                        </div>
+                        <div class="four">
+                            <h2><span>Sessões</span></h2>
+                            <p>Composição de tema e exercicios associados. Estas sessões permiteram ao alunos executalas e experenciar um sessão de programação auxiliada por um animador de codigo.
+                                Estas sessões seram pré configuradas pelos professores.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -78,7 +86,7 @@
                         <!-- TABS -->
                     	<div class="tabs">
                             <h3 class="login-tab"><a class="log-in active" href="#login-tab-content"><span>Login<span></a></h3>
-                    		<h3 class="signup-tab"><a class="sign-up" href="#signup-tab-content"><span>Sign Up</span></a></h3>
+                    		<h3 class="signup-tab"><a class="sign-up" href="#signup-tab-content" onclick="clearForm();"><span>Novo Registo</span></a></h3>
                     	</div>
                         <!-- TABS CONTENT -->
                     	<div class="tabs-content">
@@ -88,27 +96,38 @@
                     				<input type="text" class="input" id="user_login" autocomplete="off" placeholder="Email or Username">
                     				<input type="password" class="input" id="user_pass" autocomplete="off" placeholder="Password">
                     				<input type="submit" class="button" value="Login" style="float: right;" onclick="javascript:dologin();">
-                    			</form>
-                    			<div class="help-action" style="margin-top: 90%;">
-                    				<p><i class="fa fa-arrow-left" aria-hidden="true"></i><a class="forgot" href="#">Forgot your password?</a></p>
-                    			</div>
+                                </form>
+                                
+                    		<!--	RECURAR PASSWORD DO USER
+                                
+                            -->
+
+                            <div class="help-action" style="margin-top: 90%;">
+                    				<p><i class="fa fa-arrow-left" aria-hidden="true"></i><a class="forgot">Recuperar password</a></p>
+                            </div> 
+
+
                     		</div>
-                            <!-- TABS CONTENT SIGNUP -->
+                            <!-- 
+                                TABS CONTENT SIGNUP 
+                                ----FALTA FAZER ------
+                                verificar os campos obrigatorios
+                            -->
                     		<div id="signup-tab-content">
-                    			<form class="signup-form" action="" method="post">
+                    			<form class="signup-form" id="signup-form" action="" method="post">
                                     <input type="checkbox" class="checkbox"  id="aluno_id" onclick="javascript:setCheckboxAluno();">
-                                    <label for="aluno_id">Student</label>
+                                    <label for="aluno_id">Aluno *</label>
                                     <input type="checkbox" class="checkbox"  id="professor_id"  onclick="javascript:setCheckboxProfessor();">
-                                    <label for="professor_id">Teacher</label>
-                                    <input type="name" class="input" id="user_name" autocomplete="off" placeholder="Name">
-                    				<input type="email" class="input" id="user_email" autocomplete="off" placeholder="Email">
-                    				<input type="text" class="input" id="username" autocomplete="off" placeholder="Username">
-                                    <input type="password" class="input" id="user_pass" autocomplete="off" placeholder="Password">
+                                    <label for="professor_id">Professor *</label>
+                                    <input type="name" class="input" id="user_name_r" autocomplete="off" placeholder="Nome *">
+                    				<input type="email" class="input" id="user_email" autocomplete="off" placeholder="Email *">
+                    				<input type="text" class="input" id="username" autocomplete="off" placeholder="Username *">
+                                    <input type="password" class="input" id="user_pass_r" autocomplete="off" placeholder="Password *">
                                     <div class="help-action">
                                             <input type="checkbox" class="checkbox"  id="agree_terms">
-                                            <label for="agree_terms"><a class="agree" href="#">Terms of service</a></label>
+                                            <label for="agree_terms"><a class="agree">Terms of service *</a></label>
                                     </div>
-                    				<input type="submit" class="button" value="Sign Up" style="float: right;" onclick="javascript:doregist();">
+                    				<input type="submit" class="button" value="Registar" style="float: right;" onclick="javascript:doregist();">
                     			</form>
                     			
                     		</div>
@@ -117,15 +136,19 @@
                 </div>
             </div>
         </div>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 
-  
 
-    <script  src="js/login_server.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <script  src="js/login.js"></script>
     <script src="js/session.js"></script>
+    <script src="js/aes.js"></script>
+    <script src="js/config.js"></script>
 
-
+    <script>
+        function clearForm() {
+            $('#signup-form')[0].reset();
+        }
+    </script>
 
 </body>
 

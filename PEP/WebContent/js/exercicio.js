@@ -122,6 +122,7 @@ var addExercicioBtn = function(idModal){
     if (this.readyState == 4 && this.status == 200) {
       console.log(this.responseText);
       var obj = JSON.parse(this.responseText);
+      console.log(idModal);
       var modal = document.getElementById(idModal);
       modal.style.display = "none";
       getMsgExercicioModal('msgExercicioModal',obj.msg);

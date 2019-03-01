@@ -91,14 +91,14 @@ public class LoginServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT u.user_id, u.username, u.name, u.email, u.user_type as user_type_id, t.designacao as user_type FROM appconf.users AS u ";
+			sql = "SELECT u.user_id, u.username, u.name, u.email, u.user_type as user_type_id, t.designacao as user_type, u.pass_word, u.rgpd, u.ativo FROM appconf.users AS u ";
 			sql = sql + " LEFT JOIN param.type_user as t ON u.user_type = t.id ";
-			sql = sql + " WHERE (email like ? or username like ?) and pass_word like ? ";
+			sql = sql + " WHERE (email like ? or username like ?) ";
 			
 			res.setParams(new Object[] {
 					jobject.get("user_login").getAsString(), 
 					jobject.get("user_login").getAsString(), 
-					jobject.get("user_pass").getAsString(),
+//					jobject.get("user_pass").getAsString(),
 			});
 			res.setSelect(true);
 			break;

@@ -91,8 +91,14 @@ public class ExerciciosServlet extends HttpServlet{
 		
 		switch (op) {
 		case "1":
-			sql = "SELECT id, designacao, dica, solucao, enunciado, dificuldade, autor  FROM infodat.exercicio WHERE id=?";
-			res.setParams(new Object[] {jobject.get("id").getAsInt()});
+			sql = "SELECT id, designacao, dica, solucao, enunciado, dificuldade, autor  FROM infodat.exercicio ";
+			if(jobject.has("cond") && jobject.get("cond").getAsString().toString() != null) {
+				sql = sql + " WHERE " +jobject.get("cond").getAsString().toString();
+			}else {
+				sql = sql + " WHERE id=? ";
+				res.setParams(new Object[] {jobject.get("id").getAsInt()});
+			}
+			
 			res.setSelect(true);
 			break;
 		case "2":
